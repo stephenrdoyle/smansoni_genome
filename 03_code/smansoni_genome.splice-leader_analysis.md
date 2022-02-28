@@ -1,6 +1,7 @@
 # splice-leader analysis
 
-# author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
+### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
+
 
 ```
 #!/usr/bin/env bash
