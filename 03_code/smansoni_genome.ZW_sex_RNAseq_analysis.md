@@ -273,19 +273,24 @@ while read GENE; do \
           done < w_genes.list
 ```
 
+## make some plots
 ```R
+# load libraries
 library(tidyverse)
 library(patchwork)
 library(viridis)
 
+# import w data
 data_w <- read.table("sex.stage.w_genes.data.txt", header=F)
 
 # generate some labels to replace coded names
 labels <- c("Female","Male")
 names(labels) <- c("f","m")
 
+# want to order the samples on the x axis by lifestage in order. Can set the order here, and call it from ggplot
 level_order <- c('mCer_1', 'mCer_2', 'mSom1_1', 'mSom1_2', 'mSom2_1', 'mSom2_2', 'mSom3_1', 'mSom3_2', 'mAduPair_1','mAduPair_2','mAduPair_3','mAduUnpair_1','mAduUnpair_2','mAduUnpair_3', 'fCer_1', 'fCer_2', 'fSom1_1', 'fSom1_2', 'fSom2_1', 'fSom2_2', 'fSom3_1', 'fSom3_2', 'fAduPair_1', 'fAduPair_2', 'fAduPair_3', 'fAduUnpair_1', 'fAduUnpair_2', 'fAduUnpair_3')
 
+# plot w data
 plot_w <- ggplot(data_w) +
      geom_tile(aes(factor(V2, level=level_order),reorder(V3, -V5),fill=log10(V4+1))) +
           facet_grid(.~V1, scales="free_x", labeller = labeller(V1 = labels)) +
@@ -295,8 +300,10 @@ plot_w <- ggplot(data_w) +
           scale_y_discrete(position = "right")
 
 
+# import z data
 data_z <- read.table("sex.stage.z_genes.data.txt", header=F)
 
+# plot z data
 plot_z <- ggplot(data_z) +
      geom_tile(aes(factor(V2, level=level_order),reorder(V3, -V5),fill=log10(V4+1))) +
           facet_grid(.~V1, scales="free_x", labeller = labeller(V1 = labels))  +
@@ -304,7 +311,11 @@ plot_z <- ggplot(data_z) +
           theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1), legend.position="none") +
           labs(y="", x="", fill="log10(TPM)", title="Z gametologues")
 
+# comine the plots using patchwork
 plot_w + plot_z + plot_layout(guides = 'collect')
 
+# save it
 ggsave("W_Z_gametologues_RNAseq.pdf", height=5, width=7)
+ggsave("W_Z_gametologues_RNAseq.png")
 ```
+![](../04_analysis/W_Z_gametologues_RNAseq.png)
