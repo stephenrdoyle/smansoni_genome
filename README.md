@@ -1,5 +1,6 @@
 # smansoni_genome
 
+
 The respository contains information and code relating to the Schistosoma mansoni genome project 
 from Matt Berriman's Parasite Genomics group (Wellcome Sanger Institute and the University of Glasgow), 
 and supporting information to the manuscript entitled "Assembled chromosomes of the blood fluke Schistosoma mansoni provide 
