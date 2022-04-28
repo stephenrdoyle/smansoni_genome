@@ -319,3 +319,126 @@ ggsave("W_Z_gametologues_RNAseq.pdf", height=5, width=7)
 ggsave("W_Z_gametologues_RNAseq.png")
 ```
 ![](../04_analysis/W_Z_gametologues_RNAseq.png)
+
+
+
+### heatmap of Z ancestral genes
+```bash
+cat ../SM_V9_16Mar.gff | grep "SM_V9_Z" | awk '{if($3=="gene" && $4>13993393 && $5<33063208) print}' | cut -f9 | cut -c4-13 > Z_ancestral.gene.list
+
+> sex.stage.z_ancestral_genes.data.txt
+n=0
+while read GENE; do \
+     n=$((n + 1)); \
+     for STAGE in mCer_1_gene_abund.out \
+          mCer_2_gene_abund.out \
+          mSom1_1_gene_abund.out \
+          mSom1_2_gene_abund.out \
+          mSom2_1_gene_abund.out \
+          mSom2_2_gene_abund.out \
+          mSom3_1_gene_abund.out \
+          mSom3_2_gene_abund.out \
+          mAduPair_1_gene_abund.out \
+          mAduPair_2_gene_abund.out \
+          mAduPair_3_gene_abund.out \
+          mAduUnpair_1_gene_abund.out \
+          mAduUnpair_2_gene_abund.out \
+          mAduUnpair_3_gene_abund.out \
+          fCer_1_gene_abund.out \
+          fCer_2_gene_abund.out \
+          fSom1_1_gene_abund.out \
+          fSom1_2_gene_abund.out \
+          fSom2_1_gene_abund.out \
+          fSom2_2_gene_abund.out \
+          fSom3_1_gene_abund.out \
+          fSom3_2_gene_abund.out \
+          fAduPair_1_gene_abund.out \
+          fAduPair_2_gene_abund.out \
+          fAduPair_3_gene_abund.out \
+          fAduUnpair_1_gene_abund.out \
+          fAduUnpair_2_gene_abund.out \
+          fAduUnpair_3_gene_abund.out; do
+               SEX=$(echo ${STAGE} | cut -c1) ;
+               grep "${GENE}" ${STAGE} |\
+               awk -v COUNT=${n} -v STAGE=${STAGE%_gene_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               >> sex.stage.z_ancestral_genes.data.txt;
+               done ;
+          done < Z_ancestral.gene.list
+
+```
+
+
+```R
+# load libraries
+library(tidyverse)
+library(patchwork)
+library(viridis)
+
+# import w data
+data <- read.table("sex.stage.z_ancestral_genes.data.txt", header=F)
+
+# generate some labels to replace coded names
+labels <- c("Female","Male")
+names(labels) <- c("f","m")
+
+# want to order the samples on the x axis by lifestage in order. Can set the order here, and call it from ggplot
+level_order <- c('mCer_1', 'mCer_2', 'mSom1_1', 'mSom1_2', 'mSom2_1', 'mSom2_2', 'mSom3_1', 'mSom3_2', 'mAduPair_1','mAduPair_2','mAduPair_3','mAduUnpair_1','mAduUnpair_2','mAduUnpair_3', 'fCer_1', 'fCer_2', 'fSom1_1', 'fSom1_2', 'fSom2_1', 'fSom2_2', 'fSom3_1', 'fSom3_2', 'fAduPair_1', 'fAduPair_2', 'fAduPair_3', 'fAduUnpair_1', 'fAduUnpair_2', 'fAduUnpair_3')
+
+# plot w data
+plot <- ggplot(data) +
+     geom_tile(aes(factor(V2, level=level_order),reorder(V3, -V5),fill=log2(V4+1))) +
+          facet_grid(.~V1, scales="free_x", labeller = labeller(V1 = labels)) +
+          scale_fill_viridis() +
+          theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
+          labs(y="", x="", fill="log(TPM)", title="Z-linked ancestral genes") +
+          scale_y_discrete(position = "right")
+plot
+```
+
+
+
+
+cat mb_omega.gff | cut -f9 | cut -c 4-13 | sort | uniq > omega.gene.ids.list
+cat mb_IPSE.gff | cut -f9 | cut -c 4-13 | sort | uniq > ipse.gene.ids.list
+
+```bash
+> sex.stage.ipse_genes.data.txt
+n=0
+while read GENE; do \
+     n=$((n + 1)); \
+     for STAGE in mCer_1_gene_abund.out \
+          mCer_2_gene_abund.out \
+          mSom1_1_gene_abund.out \
+          mSom1_2_gene_abund.out \
+          mSom2_1_gene_abund.out \
+          mSom2_2_gene_abund.out \
+          mSom3_1_gene_abund.out \
+          mSom3_2_gene_abund.out \
+          mAduPair_1_gene_abund.out \
+          mAduPair_2_gene_abund.out \
+          mAduPair_3_gene_abund.out \
+          mAduUnpair_1_gene_abund.out \
+          mAduUnpair_2_gene_abund.out \
+          mAduUnpair_3_gene_abund.out \
+          fCer_1_gene_abund.out \
+          fCer_2_gene_abund.out \
+          fSom1_1_gene_abund.out \
+          fSom1_2_gene_abund.out \
+          fSom2_1_gene_abund.out \
+          fSom2_2_gene_abund.out \
+          fSom3_1_gene_abund.out \
+          fSom3_2_gene_abund.out \
+          fAduPair_1_gene_abund.out \
+          fAduPair_2_gene_abund.out \
+          fAduPair_3_gene_abund.out \
+          fAduUnpair_1_gene_abund.out \
+          fAduUnpair_2_gene_abund.out \
+          fAduUnpair_3_gene_abund.out; do
+               SEX=$(echo ${STAGE} | cut -c1) ;
+               grep "${GENE}" ${STAGE} |\
+               awk -v COUNT=${n} -v STAGE=${STAGE%_gene_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               >> sex.stage.ipse_genes.data.txt;
+               done ;
+          done < ipse.gene.ids.list
+
+```
