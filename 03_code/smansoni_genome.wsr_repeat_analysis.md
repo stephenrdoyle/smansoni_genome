@@ -47,6 +47,9 @@ ggsave("WSR_repeats.png")
 ```
 ![](../04_analysis/WSR_repeats.png)
 
+- plot shows repeat density per 10kb window, coloured by repeat type
+
+
 
 
 
@@ -131,103 +134,78 @@ plot_v7w + plot_rep + plot_genes + plot_layout(ncol=1)
 ```
 
 
+### Mapping the W7 contigs to the new genome assembly
+- want to see how the contigs from the previous version fits with the current assembly
+- basically show the assembly path
+
 ```bash
 cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/ALT_CONTIGS
 
+# map V7 contigs to V9
 minimap2 -Y --secondary=no -x asm20 SM_V9_21Feb.fa SM_V7_Wcontigs.fa -o V7w_to_V9_minimap_v2.paf    
 
+# collate coordinates for mapping
 grep "SM_V9_WSR" V7w_to_V9_minimap_v2.paf | sort -k8n | cut -f1-11 > V7w_to_V9_minimap_v2.txt
+
+# extract coordinates of gaps within the assembly, to show where joins have been made that are typically padded with 100 Ns
+samtools faidx SM_V9_21Feb.fa SM_V9_WSR > SM_V9_WSR.fa
+
+# Alan wrote a tool ages ago to make a bed file of gaps
+python /nfs/users/nfs_a/alt/python/bin/fasta_gaps_to_bed.py SM_V9_WSR.fa > SM_V9_WSR.gaps.bed
+
 ```
 
-
-
-```R
-library(tidyverse)
-
-data <- read.table("V7w_to_V9_minimap_v2.txt", header=F)
-data2 <- data %>% group_by(V1) %>% mutate(group_id = min(V8))
-
-plot_V7W <- ggplot(data2) +
-     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
-     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly") +
-     theme_bw()
-```
-
-
+### Mapping pacbio reads from the junctions joining W contigs from v7
 ```bash
-junction_subreads.bed
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/WSR_construction
 
-wspecific_pilon	947666	947667
-wspecific_pilon	950283	950284
-wspecific_pilon	1970116	1970117
-wspecific_pilon	4754002	4754003
-wspecific_pilon	6634601	6634602
-wspecific_pilon	6641096	6641097
-wspecific_pilon	8062142	8062143
-wspecific_pilon	13127900	13127901
-wspecific_pilon	13754066	13754067
-wspecific_pilon	14901326	14901327
-wspecific_pilon	15344882	15344883
-wspecific_pilon	16081118	16081119
-wspecific_pilon	16164607	16164608
-wspecific_pilon	17231003	17231004
-wspecific_pilon	17338728	17338729
+# using a file called "# junction_subreads.list" provided by Alan containing the reads spanning the junctions , ie.
 
+# m160825_183217_00127_c101019712550000001823228410211634_s1_p0/123055/6155_12379
+# m160825_183217_00127_c101019712550000001823228410211634_s1_p0/123055/6155_12379
 
-samtools view -b -L junction_subreads.bed out.sorted.markdup.bam | samtools fasta - > junction_subreads.fasta
-
-minimap2 -Y --secondary=no -x map-pb SM_V9_21Feb.fa junction_subreads.fasta > junction_subreads.paf
-
-cat junction_subreads.paf | grep "SM_V9_WSR" > junction_subreads.WSR.paf
-```
-
-
-```R
-library(tidyverse)
-
-reads <- read.table("junction_subreads.WSR.paf", header=F, sep="\t")
-reads2 <- reads %>% group_by(V1) %>% mutate(group_id = min(V8))
-
-plot_reads <- ggplot(reads2) +
-     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
-     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly") +
-     theme_bw()
-
-
-
-ggplot() +     
-     geom_segment(aes(x=reads2$V8/1e6, xend=reads2$V9/1e6, y=as.factor(1), yend=as.factor(1), col=as.factor(reads2$V5)), size=3) + geom_segment(aes(x=data2$V8/1e6, xend=data2$V9/1e6, y=reorder(data2$V1,(data2$group_id)), yend=reorder(data2$V1,(data2$group_id)), col=as.factor(data2$V5)), size=3) +
-     geom_vline(aes(xintercept=reads2$V8/1e6))
-
-vline=reads2$V8
-ggplot(data2) +
-     geom_vline(xintercept=vline/1e6) +
-     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=V1, yend=V1, col=as.factor(V5)), size=3)
-```
-
-
-```bash
-# new list from Alan
+# use the list of pacbio read names to pull out the reads from the fasta file containing all Schisto pacbio reads
 while read NAME; do
      samtools faidx pb_reads.fasta $NAME;
 done < junction_subreads.list > junction_subreads.v2.fasta
 
+# map the junction pacbio reads back to the genome
 minimap2 -Y --secondary=no -x map-pb SM_V9_21Feb.fa junction_subreads.v2.fasta > junction_subreads.v2.paf
 
+# sort and collect those that map to W
 cat junction_subreads.v2.paf | grep "SM_V9_WSR" > junction_subreads.v2.WSR.paf
 
+
+cd ../ALT_CONTIGS
+
+ln -s ../WSR_construction/junction_subreads.v2.WSR.paf
 ```
 
+
+### bring it all together
 ```R
 library(tidyverse)
 
-reads <- read.table("junction_subreads.v2.WSR.paf", header=F, sep="\t")
-reads2 <- reads %>% group_by(V1) %>% mutate(group_id = min(V8))
+data <- read.table("V7w_to_V9_minimap_v2.txt", header=F)
+data <- data %>% group_by(V1) %>% mutate(group_id = min(V8))
+data <- data %>% arrange(V1,group_id)
 
-plot_reads <- ggplot(reads2) +
-     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
-     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly") +
-     theme_bw()
-plot_reads
+gaps <- read.table("SM_V9_WSR.gaps.bed", header=F)
+
+reads <- read.table("junction_subreads.v2.WSR.paf", header=F, sep="\t")
+reads <- reads %>% group_by(V1) %>% mutate(group_id = min(V8))
+
+plot_V7W <- ggplot() +
+     geom_segment(data=data, aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
+     geom_segment(data=gaps, aes(x=V2/1e6, xend=V3/1e6, y=0, yend=22), col="lightgrey") +
+     geom_segment(data=reads, aes(x=V8/1e6, xend=V9/1e6, y=-2, yend=0, col=as.factor(V5), group="Pacbio reads"), size=1) +
+     geom_segment(data=data, aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
+     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly", col="Alignment direction\n (forward [+] or reverse [-])") +
+     theme_classic()
+plot_V7W
+
+ggsave("WSR_construction_V7_to_V9.png")
+ggsave("WSR_construction_V7_to_V9.pdf", width=14, height=4)
 
 ```
+![](../04_analysis/WSR_construction_V7_to_V9.png)
