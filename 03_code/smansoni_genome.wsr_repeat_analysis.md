@@ -12,13 +12,14 @@
 bedtools multicov -bams 6520_5_1_sorted.bam -bed combined_repeats_SD220223.bed > combined_repeats_SD220223.coverage
 
 # multiply the number of reads by read length, and divide by length of array
-cat combined_repeats_SD220223.coverage | awk '{print $5*100/($3-$2)}
+cat combined_repeats_SD220223.coverage | awk '{print $5*100/($3-$2)}'
+
 ```
 
 
 
 # plot of WSR repeats
-```R
+```R  
 library(tidyverse)
 library(RColorBrewer)
 
@@ -78,7 +79,7 @@ cat mb_omega.coverage | awk '{print $1,$2,$3,$4,$5/($3-$2)}' OFS="\t" | datamash
 
 
 
-```bash
+```R
 
 library(tidyverse)
 library(patchwork)
@@ -117,5 +118,107 @@ plot_genes <- ggplot(genes_data) +
 plot_v7w + plot_rep + plot_genes + plot_layout(ncol=1)
 
 
+
+```
+
+
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/ALT_CONTIGS
+
+minimap2 -Y --secondary=no -x asm20 SM_V9_21Feb.fa SM_V7_Wcontigs.fa -o V7w_to_V9_minimap_v2.paf    
+
+grep "SM_V9_WSR" V7w_to_V9_minimap_v2.paf | sort -k8n | cut -f1-11 > V7w_to_V9_minimap_v2.txt
+```
+
+
+
+```R
+library(tidyverse)
+
+data <- read.table("V7w_to_V9_minimap_v2.txt", header=F)
+data2 <- data %>% group_by(V1) %>% mutate(group_id = min(V8))
+
+plot_V7W <- ggplot(data2) +
+     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
+     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly") +
+     theme_bw()
+```
+
+
+```bash
+junction_subreads.bed
+
+wspecific_pilon	947666	947667
+wspecific_pilon	950283	950284
+wspecific_pilon	1970116	1970117
+wspecific_pilon	4754002	4754003
+wspecific_pilon	6634601	6634602
+wspecific_pilon	6641096	6641097
+wspecific_pilon	8062142	8062143
+wspecific_pilon	13127900	13127901
+wspecific_pilon	13754066	13754067
+wspecific_pilon	14901326	14901327
+wspecific_pilon	15344882	15344883
+wspecific_pilon	16081118	16081119
+wspecific_pilon	16164607	16164608
+wspecific_pilon	17231003	17231004
+wspecific_pilon	17338728	17338729
+
+
+samtools view -b -L junction_subreads.bed out.sorted.markdup.bam | samtools fasta - > junction_subreads.fasta
+
+minimap2 -Y --secondary=no -x map-pb SM_V9_21Feb.fa junction_subreads.fasta > junction_subreads.paf
+
+cat junction_subreads.paf | grep "SM_V9_WSR" > junction_subreads.WSR.paf
+```
+
+
+```R
+library(tidyverse)
+
+reads <- read.table("junction_subreads.WSR.paf", header=F, sep="\t")
+reads2 <- reads %>% group_by(V1) %>% mutate(group_id = min(V8))
+
+plot_reads <- ggplot(reads2) +
+     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
+     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly") +
+     theme_bw()
+
+
+
+ggplot() +     
+     geom_segment(aes(x=reads2$V8/1e6, xend=reads2$V9/1e6, y=as.factor(1), yend=as.factor(1), col=as.factor(reads2$V5)), size=3) + geom_segment(aes(x=data2$V8/1e6, xend=data2$V9/1e6, y=reorder(data2$V1,(data2$group_id)), yend=reorder(data2$V1,(data2$group_id)), col=as.factor(data2$V5)), size=3) +
+     geom_vline(aes(xintercept=reads2$V8/1e6))
+
+vline=reads2$V8
+ggplot(data2) +
+     geom_vline(xintercept=vline/1e6) +
+     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=V1, yend=V1, col=as.factor(V5)), size=3)
+```
+
+
+```bash
+# new list from Alan
+while read NAME; do
+     samtools faidx pb_reads.fasta $NAME;
+done < junction_subreads.list > junction_subreads.v2.fasta
+
+minimap2 -Y --secondary=no -x map-pb SM_V9_21Feb.fa junction_subreads.v2.fasta > junction_subreads.v2.paf
+
+cat junction_subreads.v2.paf | grep "SM_V9_WSR" > junction_subreads.v2.WSR.paf
+
+```
+
+```R
+library(tidyverse)
+
+reads <- read.table("junction_subreads.v2.WSR.paf", header=F, sep="\t")
+reads2 <- reads %>% group_by(V1) %>% mutate(group_id = min(V8))
+
+plot_reads <- ggplot(reads2) +
+     geom_segment(aes(x=V8/1e6, xend=V9/1e6, y=reorder(V1,(group_id)), yend=reorder(V1,(group_id)), col=as.factor(V5)), size=3) +
+     labs(x="Genomic position on WSR in V9 assembly (Mb)", y="W scaffolds from V7 assembly") +
+     theme_bw()
+plot_reads
 
 ```
