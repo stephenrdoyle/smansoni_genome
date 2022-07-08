@@ -3,10 +3,16 @@
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 
-# TO-DO - add nucmer analyses for repeats
+## Using nucmer to find position of the repeats in the genome
+```bash
+nucmer --prefix combined_repeats_SD22022_to_v9 --maxmatch sm_v9.fa combined_repeats_SD220223.fasta
 
+show-coords -lTHc -I 80 combined_repeats_SD22022_to_v9.delta > combined_repeats_SD22022_to_v9.coords
 
+grep "WSR" combined_repeats_SD22022_to_v9.coords > combined_repeats_SD22022_to_v9.WSR.coords
+```
 
+## Using the repeat coordinates to calculate the repeat coverage
 ```bash
 # bedtools to calculate coverage in repeats
 bedtools multicov -bams 6520_5_1_sorted.bam -bed combined_repeats_SD220223.bed > combined_repeats_SD220223.coverage
@@ -37,7 +43,10 @@ ggplot(data, aes(V1,fill=V13)) +
      labs(fill="Repeat", x="Chromosome position (bp)", y="Repeat count")
 
 ggsave("WSR_repeats.pdf", width=7, height=5)
+ggsave("WSR_repeats.png")
 ```
+![](../04_analysis/WSR_repeats.png)
+
 
 
 
