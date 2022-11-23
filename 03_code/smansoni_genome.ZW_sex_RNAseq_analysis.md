@@ -100,7 +100,12 @@ sm_3_9645660	13854_2#20
 
 ```
 
-
+# generate genome
+```bash
+/lustre/scratch118/infgen/team133/skb/software/STAR-2.7.6a/source/STAR --runMode genomeGenerate --runThreadN 6 --genomeDir /lustre/scratch118/i
+nfgen/team133/skb/v9/rnaseq_finalmap --genomeFastaFiles /nfs/users/nfs_s/skb/SM_V9_21Feb.fa --sjdbGTFfile /nfs/users/nfs_s/skb/SM_V9_16Mar.gtf
+--genomeSAindexNbases 10 --limitGenomeGenerateRAM 90000000000
+```
 
 
 ```bash
@@ -442,3 +447,36 @@ while read GENE; do \
           done < ipse.gene.ids.list
 
 ```
+
+
+
+# kallisto
+
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/RNAseq/KALLISTO
+
+ln -s ../../SM_V9_16Mar.gff
+ln -s ../../SM_V9_21Feb.fa
+
+cp /lustre/scratch118/infgen/team133/skb/Archive/v9/rnaseq_finalmap/Picard/*.gz .
+
+
+# make a transcripts fasta
+gffread -x TRANSCRIPTS.fa -g SM_V9_21Feb.fa SM_V9_16Mar.gff
+
+
+# index the transcripts
+kallisto index --index TRANSCRIPTS.ixd TRANSCRIPTS.fa
+
+# run kallisto
+for i in *gz ; do \
+bsub.py 10 --threads 7 kallisto "kallisto quant \
+     --bias \
+     --index TRANSCRIPTS.ixd \
+     --output-dir kallisto_${i%.fastq.gz}_out \
+     --bootstrap-samples 100 \
+     --single \
+     --threads 7 \
+     -l 400 -s 100 \
+     ${i}";
+done

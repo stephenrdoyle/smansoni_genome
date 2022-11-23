@@ -245,16 +245,16 @@ cov_V9$cov_median <- median(cov_V9$V4/10000)
 cov_V9$genome <- "V9"
 cov_V9 <- mutate(cov_V9, id = row_number())
 
-cov_V9 <- read.table("SM_V9_Z.50000b.coverage", header=F)
+<!-- cov_V9 <- read.table("SM_V9_Z.50000b.coverage", header=F)
 cov_V9$cov_median <- median(cov_V9$V4/50000)
 cov_V9$genome <- "V9"
-cov_V9 <- mutate(cov_V9, id = row_number())
+cov_V9 <- mutate(cov_V9, id = row_number()) -->
 
 
 
 cov_V5_median <- median(cov_V5$V4/10000)
 plot_cov_v5 <- ggplot(cov_V5) +
-     geom_point(aes(1:nrow(cov_V5)*10000, V4/10000), size=0.1) +
+     geom_point(aes(1:nrow(cov_V5)*10000/10e6, V4/10000), size=0.1) +
      theme_bw() +
      labs(x="Genomic position (bp)", y="Coverage")  +
      ylim(0,100) +
@@ -262,7 +262,7 @@ plot_cov_v5 <- ggplot(cov_V5) +
 
 cov_V9_median <- median(cov_V9$V4/10000)
 plot_cov_v9 <- ggplot(cov_V9) +
-     geom_point(aes(1:nrow(cov_V9)*10000, V4/10000), size=0.1) +
+     geom_point(aes(id*10000/1e6, V4/10000), size=0.1) +
      theme_bw() +
      labs(x="Genomic position (bp)", y="Coverage")  +
      ylim(0,100) +
@@ -271,6 +271,19 @@ plot_cov_v9 <- ggplot(cov_V9) +
 
 
 plot_cov_v5 + plot_cov_v9 + plot_layout(ncol=1)
+
+
+
+# zoom in on funny low Coverage
+ggplot(cov_V9) +
+     geom_point(aes(id*10000/1e6, V4/10000), size=0.1) +
+     theme_bw() +
+     labs(x="Genomic position (bp)", y="Coverage")  +
+     ylim(0,100) +
+     xlim(82,85) +
+     geom_hline(yintercept=cov_V9_median, linetype="dashed") +
+     facet_grid(scales="free", space = "free")
+
 ```
 
 # comparison track between v5 and v9
