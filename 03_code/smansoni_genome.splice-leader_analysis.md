@@ -3,7 +3,21 @@
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 
+
+
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/SPLICE_LEADER
+
+bsub.py 1 test "bash ./run_spliceleader_finder.sh \
+    SM_V10 /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.genome.preWBP18checked.fa \
+    /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.annotation.preWBP18checked.gff3 \ AACCGTCACGGTTTTACTCTTGTGATTTGTTGCATG \
+    10 \
+    $PWD/merged_1.fastq.gz \
+    $PWD/merged_2.fastq.gz"
 ```
+
+where "run_spliceleader_finder.sh" is
+```bash
 #!/usr/bin/env bash
 ########################################################################
 
@@ -18,7 +32,10 @@
 #--- bedtools v2.17.0
 #--- hisat2
 
-
+eval "$(conda shell.bash hook)"
+conda activate cutadaptenv
+module load hisat2/2.1.0--py36pl5.22.0_0
+module load subread/2.0.1--hed695b0_0
 # Notes
 #--- use bsub to run
 #--- relies on a Augustus-like GFF to detect overlap of SL with transcription start sites, and may fail to to the last step if not compatible. Can hack if needed.
@@ -103,13 +120,25 @@ samtools sort ${PREFIX}.SL-only.tmp.bam -o ${PREFIX}.SL-only.sorted.bam
 samtools index -b ${PREFIX}.SL-only.sorted.bam
 
 # count SL reads using feature counts
-featureCounts -a ${GFF} -o ${PREFIX}.featurecounts.out -g "ID" -M -O -t exon ${PREFIX}.SL-only.sorted.bam
+featureCounts -a ${GFF} -o ${PREFIX}.featurecounts.out -g "Parent" -M -O -t exon ${PREFIX}.SL-only.sorted.bam
+
+```
 
 
+
+## Analysis
+
+```bash 
+
+gff_cleaner --add-exon-ids -o SM_temp.gff3 SM_V10.annotation.preWBP18checked.gff3
+
+gff3_fix -qc_r error.txt -g SM_V10.annotation.preWBP18checked.gff3 -og corrected.gff3
+
+featureCounts -a SM_temp.gff3 -o SM_V10.featurecounts.out -g "ID" -M -O -t exon SM_V10.SL-only.sorted.bam
 
 # for schisto
 #- extract first and second exons of genes (if UTR is present, sometimes is in 2nd exon), count if 1 or more SL reads are mapped
-grep  -e $'\-1\t' -e $'\-2\t'  sm.featurecounts.out | awk '{if($7>=1) print}' | cut -f1 | cut -c-10 | sort | uniq | wc -l
+grep  -e $'\:00000001\t' -e $'\:00000002\t'  SM_V10.featurecounts.out | awk '{if($7>=1) print}' | cut -f1 | cut -c-10 | sort | uniq | wc -l
 #> 4271
 
 # check for additonal SL sequences in other exons
@@ -119,10 +148,12 @@ grep  -v -e $'\-1\t' -e $'\-2\t'  sm.featurecounts.out | awk '{if($7>=1) print}'
 # 5280 - 4271 = 1009 additional genes with an internal SL
 
 cat  sm.featurecounts.out | awk '{if($7>=1) print}' | cut -f1 | cut -c-10 | sort | uniq | wc -l
-#> 6909 genes with an SL
+#> 6898 genes with an SL
 
 # 6909 - 4271 = 2638 additional genes with an internal SL
 
 # summarise SL reads per transcript, summing over exon 1 and 2 whee needed.
 grep  -e $'\-1\t' -e $'\-2\t'  sm.featurecounts.out | awk '{if($7>=1) print}' | awk  '{ a = substr($1,1,10);b = substr($1,1,12) ;  print b,a,$2,$3,$4,$5,$7 }' OFS="\t" | datamash --full groupby 1 sum 7 | wc -l
+
+
 ```

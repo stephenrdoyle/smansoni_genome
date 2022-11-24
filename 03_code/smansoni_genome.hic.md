@@ -563,11 +563,43 @@ cat pre.bed | awk '$3=="SM_V10_WSR" {print}' OFS="\t" >> Sm_V10.pre.chromosome-o
 JUICER='/nfs/users/nfs_s/sd21/lustre118_link/software/HIC/juicer-1.6/scripts/common/juicer_tools.jar'
 MAPQ_FILTER=10
 
-bsub.py 60 juicer_V10_chr_reorder "java -jar /nfs/users/nfs_s/sd21/lustre118_link/software/HIC/juicer-1.6/scripts/common/juicer_tools.jar pre \
-     -q 10 Sm_V10.pre.chromosome-order.bed \
-     Sm_V10.pre.chromosome-order.juicer.hic \
-     /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/HIC/hicpipe_smansoni_V10_out/01_REFERENCE/REF.genome"
+bsub.py 10 juicer_V10_chr_reorder_v2 "java -jar /nfs/users/nfs_s/sd21/lustre118_link/software/HIC/juicer-1.6/scripts/common/juicer_tools.jar pre -q 10 Sm_V10.pre.chromosome-order.bed Sm_V10.pre.chromosome-order.juicer.hic REF.reordered.genome"
 
 
-cd
+cd ~/lustre118_link/schistosoma_mansoni/V10/HIC/hicpipe_smansoni_V5_out/09_JUICER
+
+bsub.py 10 juicer_V10_chr_reorder_v2 "java -jar /nfs/users/nfs_s/sd21/lustre118_link/software/HIC/juicer-1.6/scripts/common/juicer_tools.jar pre -q 10 pre.bed smansoni_V5.chromosome-order.juicer.hic REF.reordered.genome"
+
 ```
+
+
+
+
+library(idr2d)
+
+
+rep1_df <- parse_juicer_matrix("/nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/HIC/hicpipe_smansoni_V5_out/09_JUICER/smansoni_V5.chromosome-order.juicer.hic", resolution = 1e+06)
+
+
+
+docker pull higlass/higlass-docker
+
+docker run --detach \
+           --publish 8888:80 \
+           --volume ~/hg-data:/data \
+           --volume ~/hg-tmp:/tmp \
+           --name higlass-container \
+           higlass/higlass-docker
+
+
+COOLER=smansoni_V5.higlass.mcool
+wget -P ~/hg-tmp https://s3.amazonaws.com/pkerp/public/$COOLER
+
+# Confirm that the file is visible inside the container:
+docker exec higlass-container ls /tmp
+
+
+# Ingest:
+docker exec higlass-container python higlass-server/manage.py ingest_tileset --filename /tmp/smansoni_V5.higlass.cool --filetype cooler --datatype matrix
+
+docker exec -it higlass-container higlass-server/manage.py createsuperuser
