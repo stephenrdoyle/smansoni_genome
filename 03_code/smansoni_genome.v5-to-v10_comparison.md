@@ -175,3 +175,28 @@ sed -i '/^>/!s/\.//g' sm_v10.proteins.n1.fa
 diamond makedb --in sm_v5.proteins.n1.fa --db sm_v5.proteins.n1
 
 diamond blastp --db sm_v5.proteins.n1.dmnd --query sm_v10.proteins.n1.fa --outfmt "6" | sed 's/transcript://g' | awk '$1==$2 {print}' | more
+
+
+
+
+
+
+
+
+
+## Z chromosome 
+
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/V5_vs_V10/Z_CHROMOSOME
+
+# get V5 ZW chromosome
+samtools faidx ../schistosoma_mansoni.PRJEA36577.WBPS1.genomic.fa Smp.Chr_ZW > SM_V5_ZW.fa
+
+# get V10 Z chromosome
+samtools faidx ../../REF/SM_V10.genome.preWBP18checked.fa SM_V10_Z > SM_V10_Z.fa
+
+# use promer to compare
+bsub.py 20 Z_promer "promer -p Z_V5_v_V10_promer --coords --mum SM_V10_Z.fa SM_V5_ZW.fa"
+
+bsub.py 20 Z_nucmer "nucmer -p Z_V5_v_V10_nucmer --mum SM_V10_Z.fa SM_V5_ZW.fa"
+```
