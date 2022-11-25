@@ -1,8 +1,6 @@
-# S. mansoni: V5 to V10 comparisons
+# Schistosoma mansoni V10 genome: V5 to V10 comparisons
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
-
-
 
 
 ## Gene set comparison

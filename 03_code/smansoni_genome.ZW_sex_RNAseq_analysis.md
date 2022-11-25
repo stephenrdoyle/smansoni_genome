@@ -1,4 +1,6 @@
-## RNAseq of Z and W gametologues from male and females
+# Schistosoma mansoni V10 genome: RNAseq of Z and W gametologues from male and females
+
+### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 ```bash
 # samples from Picard et al

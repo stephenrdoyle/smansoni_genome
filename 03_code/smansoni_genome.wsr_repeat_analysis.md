@@ -1,4 +1,4 @@
-# W specific repeat analysis
+# Schistosoma mansoni V10 genome: W specific repeat analysis
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 

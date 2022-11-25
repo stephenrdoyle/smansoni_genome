@@ -1,4 +1,6 @@
-### Coverage plots of repetitive regions: NOR, IPSE and Omega
+# Schistosoma mansoni V10 genome: Coverage plots of repetitive regions: NOR, IPSE and Omega
+
+### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 ```bash
 # working directory

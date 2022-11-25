@@ -1,8 +1,6 @@
-# splice-leader analysis
+# Schistosoma mansoni V10 genome: Splice Leader analysis
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
-
-
 
 
 ```bash
@@ -127,33 +125,74 @@ featureCounts -a ${GFF} -o ${PREFIX}.featurecounts.out -g "Parent" -M -O -t exon
 
 
 ## Analysis
+- need to identify transcripts in that contain SL sequence at their 5' and genes that have internal SL sequences
+```bash
+>SM_V10.transcripts_w_5prime_SLs.txt
+>SM_V10.transcripts_w_SLs_anywhere.txt
+cut -f1 SM_V10.featurecounts.out | cut -f2 -d ":" | sort | uniq | grep "Smp" | while read TRANSCRIPT; do
 
-```bash 
+    grep "${TRANSCRIPT}" SM_V10.featurecounts.out > ${TRANSCRIPT}.data.tmp
+    
+    cat ${TRANSCRIPT}.data.tmp | 
+        STRAND=$( head -n 1 ${TRANSCRIPT}.data.tmp | cut -f5 )
+        if [ ${STRAND}=='+' ]; then 
+            COUNT=$(head -n2 ${TRANSCRIPT}.data.tmp | datamash sum 7)
+            GENE=$(echo ${TRANSCRIPT} | cut -c-10)
+            if [ ${COUNT} -ge 1 ]; then
+            echo -e ${TRANSCRIPT}"\t"${GENE}"\t"${COUNT} >> SM_V10.transcripts_w_5prime_SLs.txt;
+            fi
+        else 
+            COUNT=$(tail -n2 ${TRANSCRIPT}.data.tmp | datamash sum 7)
+            if [ ${COUNT} -ge 1 ]; then
+            echo -e ${TRANSCRIPT}"\t"${GENE}"\t"${COUNT} >> SM_V10.transcripts_w_5prime_SLs.txt;
+            fi
+        fi;
 
-gff_cleaner --add-exon-ids -o SM_temp.gff3 SM_V10.annotation.preWBP18checked.gff3
+    cat ${TRANSCRIPT}.data.tmp | 
+        
+        if [ ${STRAND}=='+' ]; then 
+            COUNT=$(cat ${TRANSCRIPT}.data.tmp | datamash sum 7)
+            GENE=$(echo ${TRANSCRIPT} | cut -c-10 )
+            if [ ${COUNT} -ge "1" ]; then
+            echo -e ${TRANSCRIPT}"\t"${GENE}"\t"${COUNT} >> SM_V10.transcripts_w_SLs_anywhere.txt;
+            fi
+        else 
+            COUNT=$(cat ${TRANSCRIPT}.data.tmp | datamash sum 7)
+            if [ ${COUNT} -ge "1" ]; then
+            echo -e ${TRANSCRIPT}"\t"${GENE}"\t"${COUNT} >> SM_V10.transcripts_w_SLs_anywhere.txt;
+            fi
+        fi;
+        rm ${TRANSCRIPT}.data.tmp
+    done
 
-gff3_fix -qc_r error.txt -g SM_V10.annotation.preWBP18checked.gff3 -og corrected.gff3
 
-featureCounts -a SM_temp.gff3 -o SM_V10.featurecounts.out -g "ID" -M -O -t exon SM_V10.SL-only.sorted.bam
+# count number of transcripts with 5' SLs
+wc -l SM_V10.transcripts_w_5prime_SLs.txt
+#> 4793 SM_V10.transcripts_w_5prime_SLs.txt
 
-# for schisto
-#- extract first and second exons of genes (if UTR is present, sometimes is in 2nd exon), count if 1 or more SL reads are mapped
-grep  -e $'\:00000001\t' -e $'\:00000002\t'  SM_V10.featurecounts.out | awk '{if($7>=1) print}' | cut -f1 | cut -c-10 | sort | uniq | wc -l
-#> 4271
+cat SM_V10.transcripts_w_5prime_SLs.txt | cut -c-10 | sort | uniq | wc -l
+#> 4326 genes
 
-# check for additonal SL sequences in other exons
-grep  -v -e $'\-1\t' -e $'\-2\t'  sm.featurecounts.out | awk '{if($7>=1) print}' | cut -f1 | cut -c-10 | sort | uniq | wc -l
-#> 5280
+# count number of transcripts with SLs anywhere in the gene
+wc -l SM_V10.transcripts_w_5prime_SLs.txt
+#> 7711 SM_V10.transcripts_w_SLs_anywhere.txt
 
-# 5280 - 4271 = 1009 additional genes with an internal SL
+cat SM_V10.transcripts_w_SLs_anywhere.txt | cut -c-10 | sort | uniq | wc -l
+#> 6897 genes
 
-cat  sm.featurecounts.out | awk '{if($7>=1) print}' | cut -f1 | cut -c-10 | sort | uniq | wc -l
-#> 6898 genes with an SL
+#> 6897 - 4326 = 2571 with cryptic SLs internally
 
-# 6909 - 4271 = 2638 additional genes with an internal SL
+# percentages
+cut -f1 SM_V10.featurecounts.out | cut -f2 -d ":" | sort | uniq | grep "Smp" | cut -c-10 | sort | uniq | wc -l
+#> 9918 total genes
 
-# summarise SL reads per transcript, summing over exon 1 and 2 whee needed.
-grep  -e $'\-1\t' -e $'\-2\t'  sm.featurecounts.out | awk '{if($7>=1) print}' | awk  '{ a = substr($1,1,10);b = substr($1,1,12) ;  print b,a,$2,$3,$4,$5,$7 }' OFS="\t" | datamash --full groupby 1 sum 7 | wc -l
+cut -f1 SM_V10.featurecounts.out | cut -f2 -d ":" | sort | uniq | grep "Smp" | sort | uniq | wc -l
+#> 10958 transcripts
 
+#> 4326 5' SL genes /  9918 total genes
+#> = 0.436 or 43.6%
+
+#> 2571 extra / 9918 total genes
+#> 0.259 or 25.9%
 
 ```

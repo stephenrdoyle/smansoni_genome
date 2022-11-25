@@ -1,4 +1,4 @@
-# busco analysis
+# Schistosoma mansoni V10 genome: busco analysis
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
