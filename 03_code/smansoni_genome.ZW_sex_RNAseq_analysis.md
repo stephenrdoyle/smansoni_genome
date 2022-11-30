@@ -137,64 +137,360 @@ nfgen/team133/skb/v9/rnaseq_finalmap --genomeFastaFiles /nfs/users/nfs_s/skb/SM_
 
 
 ```bash
-stringtie fCer_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fCer_1_gene_abund.out
-stringtie mAdu_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mAdu_2_gene_abund.out
-stringtie mCer_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mCer_2_gene_abund.out
-stringtie mAdu_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mAdu_1_gene_abund.out
-stringtie mCer_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mCer_1_gene_abund.out
-stringtie fSom2_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom2_2_gene_abund.out
-stringtie fSom3_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom3_2_gene_abund.out
-stringtie fSom1_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom1_2_gene_abund.out
-stringtie fSom1_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom1_1_gene_abund.out
-stringtie fSom2_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom2_1_gene_abund.out
-stringtie mSom2_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom2_1_gene_abund.out
-stringtie fSom3_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom3_1_gene_abund.out
-stringtie mSom2_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom2_2_gene_abund.out
-stringtie mSom3_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom3_1_gene_abund.out
-stringtie mSom3_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom3_2_gene_abund.out
-stringtie mSom1_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom1_1_gene_abund.out
-stringtie fAdu_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fAdu_1_gene_abund.out
-stringtie mSom1_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom1_2_gene_abund.out
-stringtie fAdu_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fAdu_2_gene_abund.out
-stringtie fCer_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fCer_2_gene_abund.out
+stringtie fCer_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fCer_1_abund.out
+stringtie mAdu_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mAdu_2_abund.out
+stringtie mCer_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mCer_2_abund.out
+stringtie mAdu_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mAdu_1_abund.out
+stringtie mCer_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mCer_1_abund.out
+stringtie fSom2_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom2_2_abund.out
+stringtie fSom3_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom3_2_abund.out
+stringtie fSom1_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom1_2_abund.out
+stringtie fSom1_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom1_1_abund.out
+stringtie fSom2_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom2_1_abund.out
+stringtie mSom2_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom2_1_abund.out
+stringtie fSom3_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fSom3_1_abund.out
+stringtie mSom2_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom2_2_abund.out
+stringtie mSom3_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom3_1_abund.out
+stringtie mSom3_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom3_2_abund.out
+stringtie mSom1_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom1_1_abund.out
+stringtie fAdu_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fAdu_1_abund.out
+stringtie mSom1_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A mSom1_2_abund.out
+stringtie fAdu_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fAdu_2_abund.out
+stringtie fCer_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 5 -A fCer_2_abund.out
 
-stringtie bf_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_3_unique.bam_gene_abund.out
-stringtie bf_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_2_unique.bam_gene_abund.out
-stringtie sm_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sm_3_unique.bam_gene_abund.out
-stringtie bm_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bm_3_unique.bam_gene_abund.out
-stringtie bm_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bm_2_unique.bam_gene_abund.out
-stringtie sm_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sm_1_unique.bam_gene_abund.out
-stringtie sf_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sf_1_unique.bam_gene_abund.out
-stringtie sm_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sm_2_unique.bam_gene_abund.out
-stringtie sf_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sf_3_unique.bam_gene_abund.out
-stringtie bm_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bm_1_unique.bam_gene_abund.out
-stringtie sf_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sf_2_unique.bam_gene_abund.out
-stringtie bf_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_1_unique.bam_gene_abund.out
-stringtie bf_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_1_unique.bam_gene_abund.out
+stringtie bf_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_3_unique.bam_abund.out
+stringtie bf_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_2_unique.bam_abund.out
+stringtie sm_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sm_3_unique.bam_abund.out
+stringtie bm_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bm_3_unique.bam_abund.out
+stringtie bm_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bm_2_unique.bam_abund.out
+stringtie sm_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sm_1_unique.bam_abund.out
+stringtie sf_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sf_1_unique.bam_abund.out
+stringtie sm_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sm_2_unique.bam_abund.out
+stringtie sf_3_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sf_3_unique.bam_abund.out
+stringtie bm_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bm_1_unique.bam_abund.out
+stringtie sf_2_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A sf_2_unique.bam_abund.out
+stringtie bf_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_1_unique.bam_abund.out
+stringtie bf_1_unique.bam -G /nfs/users/nfs_s/skb/SM_V9_16Mar.gff -p 10 -A bf_1_unique.bam_abund.out
 
 
 # fix up the names of the second batch
 
-for i in *_unique.bam_gene_abund.out; do
-     mv $i ${i%_unique.bam_gene_abund.out}_gene_abund.out;
+for i in *_unique.bam_abund.out; do
+     mv $i ${i%_unique.bam_abund.out}_abund.out;
      done
 
 # rename then to be consistent with the first batch
-mv bm_1_gene_abund.out mAduPair_1_gene_abund.out
-mv bm_2_gene_abund.out mAduPair_2_gene_abund.out
-mv bm_3_gene_abund.out mAduPair_3_gene_abund.out
-mv bf_3_gene_abund.out fAduPair_3_gene_abund.out
-mv bf_2_gene_abund.out fAduPair_2_gene_abund.out
-mv bf_1_gene_abund.out fAduPair_1_gene_abund.out
-mv sf_1_gene_abund.out fAduUnpair_1_gene_abund.out
-mv sf_2_gene_abund.out fAduUnpair_2_gene_abund.out
-mv sf_3_gene_abund.out fAduUnpair_3_gene_abund.out
-mv sm_3_gene_abund.out mAduUnpair_3_gene_abund.out
-mv sm_2_gene_abund.out mAduUnpair_2_gene_abund.out
-mv sm_1_gene_abund.out mAduUnpair_1_gene_abund.out
+mv bm_1_abund.out mAduPair_1_abund.out
+mv bm_2_abund.out mAduPair_2_abund.out
+mv bm_3_abund.out mAduPair_3_abund.out
+mv bf_3_abund.out fAduPair_3_abund.out
+mv bf_2_abund.out fAduPair_2_abund.out
+mv bf_1_abund.out fAduPair_1_abund.out
+mv sf_1_abund.out fAduUnpair_1_abund.out
+mv sf_2_abund.out fAduUnpair_2_abund.out
+mv sf_3_abund.out fAduUnpair_3_abund.out
+mv sm_3_abund.out mAduUnpair_3_abund.out
+mv sm_2_abund.out mAduUnpair_2_abund.out
+mv sm_1_abund.out mAduUnpair_1_abund.out
 
 ```
 
+
+
+
+
+
+
+
+
+```R
+# load libraries
+library(tidyverse)
+library(patchwork)
+library(viridis)
+
+# import w data
+data <- read.table("sex.stage.z_ancestral_genes.data.txt", header=F)
+
+# generate some labels to replace coded names
+labels <- c("Female","Male")
+names(labels) <- c("f","m")
+
+# want to order the samples on the x axis by lifestage in order. Can set the order here, and call it from ggplot
+level_order <- c('mCer_1', 'mCer_2', 'mSom1_1', 'mSom1_2', 'mSom2_1', 'mSom2_2', 'mSom3_1', 'mSom3_2', 'mAduPair_1','mAduPair_2','mAduPair_3','mAduUnpair_1','mAduUnpair_2','mAduUnpair_3', 'fCer_1', 'fCer_2', 'fSom1_1', 'fSom1_2', 'fSom2_1', 'fSom2_2', 'fSom3_1', 'fSom3_2', 'fAduPair_1', 'fAduPair_2', 'fAduPair_3', 'fAduUnpair_1', 'fAduUnpair_2', 'fAduUnpair_3')
+
+# plot w data
+plot <- ggplot(data) +
+     geom_tile(aes(factor(V2, level=level_order),reorder(V3, -V5),fill=log2(V4+1))) +
+          facet_grid(.~V1, scales="free_x", labeller = labeller(V1 = labels)) +
+          scale_fill_viridis() +
+          theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
+          labs(y="", x="", fill="log(TPM)", title="Z-linked ancestral genes") +
+          scale_y_discrete(position = "right")
+plot
+```
+
+
+
+
+cat mb_omega.gff | cut -f9 | cut -c 4-13 | sort | uniq > omega.gene.ids.list
+cat mb_IPSE.gff | cut -f9 | cut -c 4-13 | sort | uniq > ipse.gene.ids.list
+
+```bash
+> sex.stage.ipse_genes.data.txt
+n=0
+while read GENE; do \
+     n=$((n + 1)); \
+     for STAGE in mCer_1_abund.out \
+          mCer_2_abund.out \
+          mSom1_1_abund.out \
+          mSom1_2_abund.out \
+          mSom2_1_abund.out \
+          mSom2_2_abund.out \
+          mSom3_1_abund.out \
+          mSom3_2_abund.out \
+          mAduPair_1_abund.out \
+          mAduPair_2_abund.out \
+          mAduPair_3_abund.out \
+          mAduUnpair_1_abund.out \
+          mAduUnpair_2_abund.out \
+          mAduUnpair_3_abund.out \
+          fCer_1_abund.out \
+          fCer_2_abund.out \
+          fSom1_1_abund.out \
+          fSom1_2_abund.out \
+          fSom2_1_abund.out \
+          fSom2_2_abund.out \
+          fSom3_1_abund.out \
+          fSom3_2_abund.out \
+          fAduPair_1_abund.out \
+          fAduPair_2_abund.out \
+          fAduPair_3_abund.out \
+          fAduUnpair_1_abund.out \
+          fAduUnpair_2_abund.out \
+          fAduUnpair_3_abund.out; do
+               SEX=$(echo ${STAGE} | cut -c1) ;
+               grep "${GENE}" ${STAGE} |\
+               awk -v COUNT=${n} -v STAGE=${STAGE%_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               >> sex.stage.ipse_genes.data.txt;
+               done ;
+          done < ipse.gene.ids.list
+
+```
+
+
+
+# kallisto
+
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/RNAseq/KALLISTO
+
+ln -s ../../SM_V9_16Mar.gff
+ln -s ../../SM_V9_21Feb.fa
+
+cp /lustre/scratch118/infgen/team133/skb/Archive/v9/rnaseq_finalmap/Picard/*.gz .
+
+
+# make a transcripts fasta
+gffread -x TRANSCRIPTS.fa -g SM_V9_21Feb.fa SM_V9_16Mar.gff
+
+
+# index the transcripts
+kallisto index --index TRANSCRIPTS.ixd TRANSCRIPTS.fa
+
+# run kallisto
+for i in *gz ; do \
+bsub.py 10 --threads 7 kallisto "kallisto quant \
+     --bias \
+     --index TRANSCRIPTS.ixd \
+     --output-dir kallisto_${i%.fastq.gz}_out \
+     --bootstrap-samples 100 \
+     --single \
+     --threads 7 \
+     -l 400 -s 100 \
+     ${i}";
+done
+
+
+
+
+
+
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/RNASEQ
+
+mkdir DATA
+
+mkdir STAR_GENOME
+
+# make a gtf
+gffread /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.annotation.preWBP18checked.gff3 -T -o SM_V10.annotation.reWBP18checked.gtf
+
+# Optimisation of STAR parameters: https://link.springer.com/protocol/10.1007/978-1-4939-3572-7_13
+
+bsub.py --threads 8 20 starmap_genome "~sd21/lustre118_link/software/TRANSCRIPTOME/STAR/bin/Linux_x86_64/STAR \
+     --runMode genomeGenerate \
+     --runThreadN 8 \
+     --genomeDir $PWD/STAR_GENOME \
+     --genomeFastaFiles /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.genome.preWBP18checked.fa \
+     --sjdbGTFfile /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/RNASEQ/SM_V10.annotation.reWBP18checked.gtf \
+     --limitGenomeGenerateRAM 90000000000"
+```
+
+## Mapping single end reads
+```bash
+# map single end reads
+>run_star_mapping_SE.sh
+
+while read SAMPLE_NAME FASTQ ; do
+     echo "bsub.py --threads 4 20 starmap_${SAMPLE_NAME} ~sd21/lustre118_link/software/TRANSCRIPTOME/STAR/bin/Linux_x86_64/STAR --runThreadN 4 --genomeDir ${PWD}/STAR_GENOME --readFilesIn ${PWD}/DATA/${FASTQ} --readFilesCommand zcat --alignIntronMin 10 --outSAMtype BAM SortedByCoordinate --twopassMode Basic --outFileNamePrefix star_${SAMPLE_NAME} --outWigType bedGraph" >> run_star_mapping_SE.sh; 
+done < SE_samplename_fastqs.list
+
+chmod a+x run_star_mapping_SE.sh
+
+./run_star_mapping_SE.sh
+
+```
+where "SE_samplename_fastqs.list" contains:
+
+```bash 
+fAdu_1	SRR3223447.fastq.gz
+fAdu_2	SRR3223448.fastq.gz
+fCer_1	SRR3223434.fastq.gz
+fCer_2	SRR3223435.fastq.gz
+fSom1_1	SRR3223436.fastq.gz
+fSom1_2	SRR3223439.fastq.gz
+fSom2_1	SRR3223443.fastq.gz
+fSom2_2	SRR3223444.fastq.gz
+fSom3_1	SRR3223445.fastq.gz
+fSom3_2	SRR3223446.fastq.gz
+mAdu_1	SRR3223432.fastq.gz
+mAdu_2	SRR3223433.fastq.gz
+mCer_1	SRR3211868.fastq.gz
+mCer_2	SRR3216389.fastq.gz
+mSom1_1	SRR3223426.fastq.gz
+mSom1_2	SRR3223427.fastq.gz
+mSom2_1	SRR3223428.fastq.gz
+mSom2_2	SRR3223429.fastq.gz
+mSom3_1	SRR3223430.fastq.gz
+mSom3_2	SRR3223431.fastq.gz
+
+```
+
+
+
+## Map paired end reads
+```bash
+# need to be in the DATA dir due to the concatenated fastq files
+cd ~/lustre118_link/schistosoma_mansoni/V10/RNASEQ/DATA
+
+>run_star_mapping_PE.sh
+while read SAMPLE_NAME FASTQ1 FASTQ2 ; do
+     echo "bsub.py --threads 4 20 starmap_${SAMPLE_NAME} ~sd21/lustre118_link/software/TRANSCRIPTOME/STAR/bin/Linux_x86_64/STAR --runThreadN 4 --genomeDir ../STAR_GENOME --readFilesIn ${FASTQ1} ${FASTQ2} --readFilesCommand zcat --alignIntronMin 10 --alignIntronMax 100000 --outSAMtype BAM SortedByCoordinate --twopassMode Basic --outFileNamePrefix star_${SAMPLE_NAME} --outWigType bedGraph" >> run_star_mapping_PE.sh; 
+done < PE_samplename_fastqs.list
+
+chmod a+x run_star_mapping_PE.sh
+
+./run_star_mapping_PE.sh
+
+```
+where "PE_samplename_fastqs.list" cotains:
+
+```bash 
+mAduUnpair_3	12391_1#20_1.fastq.gz,12391_2#20_1.fastq.gz,13853_1#20_1.fastq.gz,13853_2#20_1.fastq.gz,13854_1#20_1.fastq.gz,13854_2#20_1.fastq.gz	12391_1#20_2.fastq.gz,12391_2#20_2.fastq.gz,13853_1#20_2.fastq.gz,13853_2#20_2.fastq.gz,13854_1#20_2.fastq.gz,13854_2#20_2.fastq.gz
+mAduUnpair_2	12391_1#18_1.fastq.gz,12391_2#18_1.fastq.gz,13853_1#18_1.fastq.gz,13853_2#18_1.fastq.gz,13854_1#18_1.fastq.gz,13854_2#18_1.fastq.gz	12391_1#18_2.fastq.gz,12391_2#18_2.fastq.gz,13853_1#18_2.fastq.gz,13853_2#18_2.fastq.gz,13854_1#18_2.fastq.gz,13854_2#18_2.fastq.gz
+mAduUnpair_1	12391_1#17_1.fastq.gz,12391_2#17_1.fastq.gz,13853_1#17_1.fastq.gz,13853_2#17_1.fastq.gz,13854_1#17_1.fastq.gz,13854_2#17_1.fastq.gz	12391_1#17_2.fastq.gz,12391_2#17_2.fastq.gz,13853_1#17_2.fastq.gz,13853_2#17_2.fastq.gz,13854_1#17_2.fastq.gz,13854_2#17_2.fastq.gz
+fAduUnpair_3	12391_1#24_1.fastq.gz,12391_2#24_1.fastq.gz,13853_1#24_1.fastq.gz,13853_2#24_1.fastq.gz,13854_1#24_1.fastq.gz,13854_2#24_1.fastq.gz 	12391_1#24_2.fastq.gz,12391_2#24_2.fastq.gz,13853_1#24_2.fastq.gz,13853_2#24_2.fastq.gz,13854_1#24_2.fastq.gz,13854_2#24_2.fastq.gz
+fAduUnpair_2	12391_1#23_1.fastq.gz,12391_2#23_1.fastq.gz,13853_1#23_1.fastq.gz,13853_2#23_1.fastq.gz,13854_1#23_1.fastq.gz,13854_2#23_1.fastq.gz	12391_1#23_2.fastq.gz,12391_2#23_2.fastq.gz,13853_1#23_2.fastq.gz,13853_2#23_2.fastq.gz,13854_1#23_2.fastq.gz,13854_2#23_2.fastq.gz
+fAduUnpair_1	12391_1#22_1.fastq.gz,12391_2#22_1.fastq.gz,13853_1#22_1.fastq.gz,13853_2#22_1.fastq.gz,13854_1#22_1.fastq.gz,13854_2#22_1.fastq.gz	12391_1#22_2.fastq.gz,12391_2#22_2.fastq.gz,13853_1#22_2.fastq.gz,13853_2#22_2.fastq.gz,13854_1#22_2.fastq.gz,13854_2#22_2.fastq.gz
+mAduPair_3	12391_1#21_1.fastq.gz,12391_2#21_1.fastq.gz,13853_1#21_1.fastq.gz,13853_2#21_1.fastq.gz,13854_1#21_1.fastq.gz,13854_2#21_1.fastq.gz	12391_1#21_2.fastq.gz,12391_2#21_2.fastq.gz,13853_1#21_2.fastq.gz,13853_2#21_2.fastq.gz,13854_1#21_2.fastq.gz,13854_2#21_2.fastq.gz
+mAduPair_2	12391_1#19_1.fastq.gz,12391_2#19_1.fastq.gz,13853_1#19_1.fastq.gz,13853_2#19_1.fastq.gz,13854_1#19_1.fastq.gz,13854_2#19_1.fastq.gz	12391_1#19_2.fastq.gz,12391_2#19_2.fastq.gz,13853_1#19_2.fastq.gz,13853_2#19_2.fastq.gz,13854_1#19_2.fastq.gz,13854_2#19_2.fastq.gz
+mAduPair_1	12391_1#6_1.fastq.gz,12391_2#6_1.fastq.gz,13853_1#6_1.fastq.gz,13853_2#6_1.fastq.gz,13854_1#6_1.fastq.gz,13854_2#6_1.fastq.gz	12391_1#6_2.fastq.gz,12391_2#6_2.fastq.gz,13853_1#6_2.fastq.gz,13853_2#6_2.fastq.gz,13854_1#6_2.fastq.gz,13854_2#6_2.fastq.gz
+fAduPair_3	12391_1#15_1.fastq.gz,12391_2#15_1.fastq.gz,13853_1#15_1.fastq.gz,13853_2#15_1.fastq.gz,13854_1#15_1.fastq.gz,13854_2#15_1.fastq.gz	12391_1#15_2.fastq.gz,12391_2#15_2.fastq.gz,13853_1#15_2.fastq.gz,13853_2#15_2.fastq.gz,13854_1#15_2.fastq.gz,13854_2#15_2.fastq.gz
+fAduPair_2	12391_1#14_1.fastq.gz,12391_2#14_1.fastq.gz,13853_1#14_1.fastq.gz,13853_2#14_1.fastq.gz,13854_1#14_1.fastq.gz,13854_2#14_1.fastq.gz	12391_1#14_2.fastq.gz,12391_2#14_2.fastq.gz,13853_1#14_2.fastq.gz,13853_2#14_2.fastq.gz,13854_1#14_2.fastq.gz,13854_2#14_2.fastq.gz
+fAduPair_1	12391_1#12_1.fastq.gz,12391_2#12_1.fastq.gz,13853_1#12_1.fastq.gz,13853_2#12_1.fastq.gz,13854_1#12_1.fastq.gz,13854_2#12_1.fastq.gz	12391_1#12_2.fastq.gz,12391_2#12_2.fastq.gz,13853_1#12_2.fastq.gz,13853_2#12_2.fastq.gz,13854_1#12_2.fastq.gz,13854_2#12_2.fastq.gz
+
+```
+
+- once mapping is complete, clean up
+
+```bash
+mkdir MAPPING
+
+mv *bam MAPPING
+
+```
+
+
+
+
+
+
+
+
+## Mapping with HiSat2 
+```bash
+module load hisat2/2.1.0--py36pl5.22.0_0
+
+
+bsub.py 5 hisat_build "hisat2-build /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.genome.preWBP18checked.fa sm_v10_hisat2"
+
+~sd21/lustre118_link/software/TRANSCRIPTOME/hisat2-2.2.1/hisat2_extract_splice_sites.py SM_V10.annotation.reWBP18checked.gtf > sm_v10.splicesites.txt
+
+# need to be in the DATA dir due to the concatenated fastq files
+cd ~/lustre118_link/schistosoma_mansoni/V10/RNASEQ/DATA
+
+>run_hisat_mapping.sh
+
+# single end reads
+while read SAMPLE_NAME FASTQ ; do
+     echo "bsub.py --threads 8 20 hisat_${SAMPLE_NAME} \"hisat2 -x ../sm_v10_hisat2 \
+          --known-splicesite-infile ../sm_v10.splicesites.txt \
+          --threads 8 -U ${FASTQ} \
+          --min-intronlen 20 \
+          --max-intronlen 110000 \| \
+          samtools view -h -b - \| samtools sort -T ${SAMPLE_NAME} -o hisat.${SAMPLE_NAME}.sorted.bam - \" " >> run_hisat_mapping.sh
+done < SE_samplename_fastqs.list 
+
+
+# pair end reads
+while read SAMPLE_NAME FASTQ1 FASTQ2 ; do
+     echo "bsub.py --threads 8 20 hisat_${SAMPLE_NAME} \"hisat2 -x ../sm_v10_hisat2 \
+          --known-splicesite-infile ../sm_v10.splicesites.txt \
+          --threads 8 -U ${FASTQ1} \
+          --min-intronlen 20 \
+          --max-intronlen 110000 \| \
+          samtools view -h -b - \| samtools sort -T ${SAMPLE_NAME} -o hisat.${SAMPLE_NAME}.sorted.bam - \" " >> run_hisat_mapping.sh
+done < PE_samplename_fastqs.list 
+
+chmod a+x run_hisat_mapping.sh
+
+./run_hisat_mapping.sh
+
+rm *.[oe]
+```
+
+## make bedgraphs
+```bash
+for i in *.bam ; do
+     bsub.py 10 bedgraph "bedtools genomecov -ibam ${i} -bg \> ${i%.bam}.bedgraph ";
+done
+
+```
+
+## run stringtie
+
+```bash 
+module load stringtie/2.1.4--h7e0af3c_0
+
+for i in hisat.*.sorted.bam ; do 
+     bsub.py 10 --threads 5 stringtie_${i%.sorted.bam} "stringtie ${i} -G /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.annotation.preWBP18checked.gff3 -p 5 -A ${i%.sorted.bam}_abund.out";
+done
+
+```
+for file in *_abund.out ; do 
+     mv -v "$file" "${file#*hisat.}"; 
+     done
 
 
 
@@ -205,37 +501,37 @@ mv sm_1_gene_abund.out mAduUnpair_1_gene_abund.out
 n=0
 while read GENE; do \
      n=$((n + 1)); \
-     for STAGE in mCer_1_gene_abund.out \
-          mCer_2_gene_abund.out \
-          mSom1_1_gene_abund.out \
-          mSom1_2_gene_abund.out \
-          mSom2_1_gene_abund.out \
-          mSom2_2_gene_abund.out \
-          mSom3_1_gene_abund.out \
-          mSom3_2_gene_abund.out \
-          mAduPair_1_gene_abund.out \
-          mAduPair_2_gene_abund.out \
-          mAduPair_3_gene_abund.out \
-          mAduUnpair_1_gene_abund.out \
-          mAduUnpair_2_gene_abund.out \
-          mAduUnpair_3_gene_abund.out \
-          fCer_1_gene_abund.out \
-          fCer_2_gene_abund.out \
-          fSom1_1_gene_abund.out \
-          fSom1_2_gene_abund.out \
-          fSom2_1_gene_abund.out \
-          fSom2_2_gene_abund.out \
-          fSom3_1_gene_abund.out \
-          fSom3_2_gene_abund.out \
-          fAduPair_1_gene_abund.out \
-          fAduPair_2_gene_abund.out \
-          fAduPair_3_gene_abund.out \
-          fAduUnpair_1_gene_abund.out \
-          fAduUnpair_2_gene_abund.out \
-          fAduUnpair_3_gene_abund.out; do
+     for STAGE in mCer_1_abund.out \
+          mCer_2_abund.out \
+          mSom1_1_abund.out \
+          mSom1_2_abund.out \
+          mSom2_1_abund.out \
+          mSom2_2_abund.out \
+          mSom3_1_abund.out \
+          mSom3_2_abund.out \
+          mAduPair_1_abund.out \
+          mAduPair_2_abund.out \
+          mAduPair_3_abund.out \
+          mAduUnpair_1_abund.out \
+          mAduUnpair_2_abund.out \
+          mAduUnpair_3_abund.out \
+          fCer_1_abund.out \
+          fCer_2_abund.out \
+          fSom1_1_abund.out \
+          fSom1_2_abund.out \
+          fSom2_1_abund.out \
+          fSom2_2_abund.out \
+          fSom3_1_abund.out \
+          fSom3_2_abund.out \
+          fAduPair_1_abund.out \
+          fAduPair_2_abund.out \
+          fAduPair_3_abund.out \
+          fAduUnpair_1_abund.out \
+          fAduUnpair_2_abund.out \
+          fAduUnpair_3_abund.out; do
                SEX=$(echo ${STAGE} | cut -c1) ;
                grep "${GENE}" ${STAGE} |\
-               awk -v COUNT=${n} -v STAGE=${STAGE%_gene_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               awk -v COUNT=${n} -v STAGE=${STAGE%_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
                >> sex.stage.z_genes.data.txt;
                done ;
           done < z_genes.list
@@ -244,37 +540,37 @@ while read GENE; do \
 n=0
 while read GENE; do \
      n=$((n + 1)); \
-     for STAGE in mCer_1_gene_abund.out \
-          mCer_2_gene_abund.out \
-          mSom1_1_gene_abund.out \
-          mSom1_2_gene_abund.out \
-          mSom2_1_gene_abund.out \
-          mSom2_2_gene_abund.out \
-          mSom3_1_gene_abund.out \
-          mSom3_2_gene_abund.out \
-          mAduPair_1_gene_abund.out \
-          mAduPair_2_gene_abund.out \
-          mAduPair_3_gene_abund.out \
-          mAduUnpair_1_gene_abund.out \
-          mAduUnpair_2_gene_abund.out \
-          mAduUnpair_3_gene_abund.out \
-          fCer_1_gene_abund.out \
-          fCer_2_gene_abund.out \
-          fSom1_1_gene_abund.out \
-          fSom1_2_gene_abund.out \
-          fSom2_1_gene_abund.out \
-          fSom2_2_gene_abund.out \
-          fSom3_1_gene_abund.out \
-          fSom3_2_gene_abund.out \
-          fAduPair_1_gene_abund.out \
-          fAduPair_2_gene_abund.out \
-          fAduPair_3_gene_abund.out \
-          fAduUnpair_1_gene_abund.out \
-          fAduUnpair_2_gene_abund.out \
-          fAduUnpair_3_gene_abund.out; do
+     for STAGE in mCer_1_abund.out \
+          mCer_2_abund.out \
+          mSom1_1_abund.out \
+          mSom1_2_abund.out \
+          mSom2_1_abund.out \
+          mSom2_2_abund.out \
+          mSom3_1_abund.out \
+          mSom3_2_abund.out \
+          mAduPair_1_abund.out \
+          mAduPair_2_abund.out \
+          mAduPair_3_abund.out \
+          mAduUnpair_1_abund.out \
+          mAduUnpair_2_abund.out \
+          mAduUnpair_3_abund.out \
+          fCer_1_abund.out \
+          fCer_2_abund.out \
+          fSom1_1_abund.out \
+          fSom1_2_abund.out \
+          fSom2_1_abund.out \
+          fSom2_2_abund.out \
+          fSom3_1_abund.out \
+          fSom3_2_abund.out \
+          fAduPair_1_abund.out \
+          fAduPair_2_abund.out \
+          fAduPair_3_abund.out \
+          fAduUnpair_1_abund.out \
+          fAduUnpair_2_abund.out \
+          fAduUnpair_3_abund.out; do
                SEX=$(echo ${STAGE} | cut -c1) ;
                grep "${GENE}" ${STAGE} |\
-               awk -v COUNT=${n} -v STAGE=${STAGE%_gene_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               awk -v COUNT=${n} -v STAGE=${STAGE%_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
                >> sex.stage.w_genes.data.txt;
                done ;
           done < w_genes.list
@@ -337,148 +633,39 @@ cat ../SM_V9_16Mar.gff | grep "SM_V9_Z" | awk '{if($3=="gene" && $4>13993393 && 
 n=0
 while read GENE; do \
      n=$((n + 1)); \
-     for STAGE in mCer_1_gene_abund.out \
-          mCer_2_gene_abund.out \
-          mSom1_1_gene_abund.out \
-          mSom1_2_gene_abund.out \
-          mSom2_1_gene_abund.out \
-          mSom2_2_gene_abund.out \
-          mSom3_1_gene_abund.out \
-          mSom3_2_gene_abund.out \
-          mAduPair_1_gene_abund.out \
-          mAduPair_2_gene_abund.out \
-          mAduPair_3_gene_abund.out \
-          mAduUnpair_1_gene_abund.out \
-          mAduUnpair_2_gene_abund.out \
-          mAduUnpair_3_gene_abund.out \
-          fCer_1_gene_abund.out \
-          fCer_2_gene_abund.out \
-          fSom1_1_gene_abund.out \
-          fSom1_2_gene_abund.out \
-          fSom2_1_gene_abund.out \
-          fSom2_2_gene_abund.out \
-          fSom3_1_gene_abund.out \
-          fSom3_2_gene_abund.out \
-          fAduPair_1_gene_abund.out \
-          fAduPair_2_gene_abund.out \
-          fAduPair_3_gene_abund.out \
-          fAduUnpair_1_gene_abund.out \
-          fAduUnpair_2_gene_abund.out \
-          fAduUnpair_3_gene_abund.out; do
+     for STAGE in mCer_1_abund.out \
+          mCer_2_abund.out \
+          mSom1_1_abund.out \
+          mSom1_2_abund.out \
+          mSom2_1_abund.out \
+          mSom2_2_abund.out \
+          mSom3_1_abund.out \
+          mSom3_2_abund.out \
+          mAduPair_1_abund.out \
+          mAduPair_2_abund.out \
+          mAduPair_3_abund.out \
+          mAduUnpair_1_abund.out \
+          mAduUnpair_2_abund.out \
+          mAduUnpair_3_abund.out \
+          fCer_1_abund.out \
+          fCer_2_abund.out \
+          fSom1_1_abund.out \
+          fSom1_2_abund.out \
+          fSom2_1_abund.out \
+          fSom2_2_abund.out \
+          fSom3_1_abund.out \
+          fSom3_2_abund.out \
+          fAduPair_1_abund.out \
+          fAduPair_2_abund.out \
+          fAduPair_3_abund.out \
+          fAduUnpair_1_abund.out \
+          fAduUnpair_2_abund.out \
+          fAduUnpair_3_abund.out; do
                SEX=$(echo ${STAGE} | cut -c1) ;
                grep "${GENE}" ${STAGE} |\
-               awk -v COUNT=${n} -v STAGE=${STAGE%_gene_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               awk -v COUNT=${n} -v STAGE=${STAGE%_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
                >> sex.stage.z_ancestral_genes.data.txt;
                done ;
           done < Z_ancestral.gene.list
 
 ```
-
-
-```R
-# load libraries
-library(tidyverse)
-library(patchwork)
-library(viridis)
-
-# import w data
-data <- read.table("sex.stage.z_ancestral_genes.data.txt", header=F)
-
-# generate some labels to replace coded names
-labels <- c("Female","Male")
-names(labels) <- c("f","m")
-
-# want to order the samples on the x axis by lifestage in order. Can set the order here, and call it from ggplot
-level_order <- c('mCer_1', 'mCer_2', 'mSom1_1', 'mSom1_2', 'mSom2_1', 'mSom2_2', 'mSom3_1', 'mSom3_2', 'mAduPair_1','mAduPair_2','mAduPair_3','mAduUnpair_1','mAduUnpair_2','mAduUnpair_3', 'fCer_1', 'fCer_2', 'fSom1_1', 'fSom1_2', 'fSom2_1', 'fSom2_2', 'fSom3_1', 'fSom3_2', 'fAduPair_1', 'fAduPair_2', 'fAduPair_3', 'fAduUnpair_1', 'fAduUnpair_2', 'fAduUnpair_3')
-
-# plot w data
-plot <- ggplot(data) +
-     geom_tile(aes(factor(V2, level=level_order),reorder(V3, -V5),fill=log2(V4+1))) +
-          facet_grid(.~V1, scales="free_x", labeller = labeller(V1 = labels)) +
-          scale_fill_viridis() +
-          theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
-          labs(y="", x="", fill="log(TPM)", title="Z-linked ancestral genes") +
-          scale_y_discrete(position = "right")
-plot
-```
-
-
-
-
-cat mb_omega.gff | cut -f9 | cut -c 4-13 | sort | uniq > omega.gene.ids.list
-cat mb_IPSE.gff | cut -f9 | cut -c 4-13 | sort | uniq > ipse.gene.ids.list
-
-```bash
-> sex.stage.ipse_genes.data.txt
-n=0
-while read GENE; do \
-     n=$((n + 1)); \
-     for STAGE in mCer_1_gene_abund.out \
-          mCer_2_gene_abund.out \
-          mSom1_1_gene_abund.out \
-          mSom1_2_gene_abund.out \
-          mSom2_1_gene_abund.out \
-          mSom2_2_gene_abund.out \
-          mSom3_1_gene_abund.out \
-          mSom3_2_gene_abund.out \
-          mAduPair_1_gene_abund.out \
-          mAduPair_2_gene_abund.out \
-          mAduPair_3_gene_abund.out \
-          mAduUnpair_1_gene_abund.out \
-          mAduUnpair_2_gene_abund.out \
-          mAduUnpair_3_gene_abund.out \
-          fCer_1_gene_abund.out \
-          fCer_2_gene_abund.out \
-          fSom1_1_gene_abund.out \
-          fSom1_2_gene_abund.out \
-          fSom2_1_gene_abund.out \
-          fSom2_2_gene_abund.out \
-          fSom3_1_gene_abund.out \
-          fSom3_2_gene_abund.out \
-          fAduPair_1_gene_abund.out \
-          fAduPair_2_gene_abund.out \
-          fAduPair_3_gene_abund.out \
-          fAduUnpair_1_gene_abund.out \
-          fAduUnpair_2_gene_abund.out \
-          fAduUnpair_3_gene_abund.out; do
-               SEX=$(echo ${STAGE} | cut -c1) ;
-               grep "${GENE}" ${STAGE} |\
-               awk -v COUNT=${n} -v STAGE=${STAGE%_gene_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
-               >> sex.stage.ipse_genes.data.txt;
-               done ;
-          done < ipse.gene.ids.list
-
-```
-
-
-
-# kallisto
-
-```bash
-cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/RNAseq/KALLISTO
-
-ln -s ../../SM_V9_16Mar.gff
-ln -s ../../SM_V9_21Feb.fa
-
-cp /lustre/scratch118/infgen/team133/skb/Archive/v9/rnaseq_finalmap/Picard/*.gz .
-
-
-# make a transcripts fasta
-gffread -x TRANSCRIPTS.fa -g SM_V9_21Feb.fa SM_V9_16Mar.gff
-
-
-# index the transcripts
-kallisto index --index TRANSCRIPTS.ixd TRANSCRIPTS.fa
-
-# run kallisto
-for i in *gz ; do \
-bsub.py 10 --threads 7 kallisto "kallisto quant \
-     --bias \
-     --index TRANSCRIPTS.ixd \
-     --output-dir kallisto_${i%.fastq.gz}_out \
-     --bootstrap-samples 100 \
-     --single \
-     --threads 7 \
-     -l 400 -s 100 \
-     ${i}";
-done
