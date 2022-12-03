@@ -163,42 +163,24 @@ fastaq to_fasta -l0 V5.proteins.fa V5.proteins.l0.fa
 sed -i 's/\.$//g' V5.proteins.l0.fa
 
 
->blast.out
+module load emboss/6.6.0--h6debe1e_0
+
+echo -e V5_GENE"\t"V10_GENE"\t"LENGTH"\t"IDENTITY"\t"SIMILARITY"\t"GAPS"\t"SCORE > V5_V10_1-2-1.genes.needle-comparison.txt
 while read V5_GENE V10_GENE; do
      grep -A1 -m1 "${V5_GENE}" V5.proteins.l0.fa > V5.gene.tmp.fa
      grep -A1 -m1 "${V10_GENE}" V10.proteins.l0.fa > V10.gene.tmp.fa
-     
-     # run needle for global alignment
      needle -asequence V5.gene.tmp.fa -bsequence V10.gene.tmp.fa -gapopen 10 -gapextend 0.5 -outfile needle.out.tmp
-     
-     # extract needle stats
      LENGTH=$(grep "Length" needle.out.tmp | awk '{print $3}')
-     IDENTITY=$(grep "Identity" needle.out.tmp | awk -F '[()]' '{print $2}')
-     SIMILARITY=$(grep "Similarity" needle.out.tmp | awk -F '[()]' '{print $2}')
-     GAPS=$(grep "Gaps" needle.out.tmp | awk -F '[()]' '{print $2}')
-     SCORE=$(grep "Gaps" needle.out.tmp | awk -F '[()]' '{print $2}')
-
-     # summarise data
-     echo -e ${V5_GENE}"\t"${V10_GENE}"\t"${LENGTH}"\t"${IDENTITY}"\t"${SIMILARITY}"\t"${GAPS}"\t"${SCORE} >> blast.out;
-     done < test
+     IDENTITY=$(grep "Identity" needle.out.tmp | awk -F '[()]' '{print $2}' | sed 's/%//g' )
+     SIMILARITY=$(grep "Similarity" needle.out.tmp | awk -F '[()]' '{print $2}' | sed 's/%//g')
+     GAPS=$(grep "Gaps" needle.out.tmp | awk -F '[()]' '{print $2}' | sed 's/%//g')
+     SCORE=$(grep "Gaps" needle.out.tmp | awk -F '[()]' '{print $2}' | sed 's/%//g')
+     echo -e ${V5_GENE}"\t"${V10_GENE}"\t"${LENGTH}"\t"${IDENTITY}"\t"${SIMILARITY}"\t"${GAPS}"\t"${SCORE} >> V5_V10_1-2-1.genes.needle-comparison.txt;
+     done < V5_V10_1-2-1.genes.txt
 
 
 
->sm_v5.proteins.shared.fa
-
-while read NAME; do
-     grep -A1 -m1 "${NAME}" sm_v5.proteins.l0.fa >> sm_v5.proteins.shared.fa
-done < sm_shared_genes.txt
-
-
-
->sm_v10.proteins.shared.fa
-
-while read NAME; do
-     grep -A1 -m1 "${NAME}" sm_v10.proteins.l0.fa >> sm_v10.proteins.shared.fa
-done < sm_shared_genes.txt
-
-
+```
 
 
 
