@@ -3,135 +3,86 @@
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 
-## Using nucmer to find position of the repeats in the genome
+## W-specific repeat position in WSR
+### Using nucmer to find position of the repeats in the genome
 ```bash
-nucmer --prefix combined_repeats_SD22022_to_v9 --maxmatch sm_v9.fa combined_repeats_SD220223.fasta
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REPEATS/WSR
 
-show-coords -lTHc -I 80 combined_repeats_SD22022_to_v9.delta > combined_repeats_SD22022_to_v9.coords
+bsub.py 10 nucmer "nucmer --prefix combined_repeats_SD22022_to_v10 --maxmatch SM_V10_WSR.fa combined_repeats_SD220223.fasta"
 
-grep "WSR" combined_repeats_SD22022_to_v9.coords > combined_repeats_SD22022_to_v9.WSR.coords
-```
+show-coords -lTHc -I 80 combined_repeats_SD22022_to_v10.delta > combined_repeats_SD22022_to_v10.coords
 
-## Using the repeat coordinates to calculate the repeat coverage
-```bash
-# bedtools to calculate coverage in repeats
-bedtools multicov -bams 6520_5_1_sorted.bam -bed combined_repeats_SD220223.bed > combined_repeats_SD220223.coverage
-
-# multiply the number of reads by read length, and divide by length of array
-cat combined_repeats_SD220223.coverage | awk '{print $5*100/($3-$2)}'
+grep "WSR" combined_repeats_SD22022_to_v10.coords > combined_repeats_SD22022_to_v10.WSR.coords
 
 ```
 
+## Similarity between W-specific repeat groups
+```bash
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REPEATS/WSR
+
+samtools faidx ../REF/SM_V10.genome.preWBP18checked.fa SM_V10_WSR > SM_V10_WSR.fa
+
+samtools faidx SM_V10_WSR.fa
+
+cut -f1,2 SM_V10_WSR.fa.fai > SM_V10_WSR.genome
+
+bedtools makewindows -g SM_V10_WSR.genome -w 10000 > SM_V10_WSR.10k.bed
+
+bedtools getfasta -fi SM_V10_WSR.fa -fo SM_V10_WSR.10k.fa -bed SM_V10_WSR.10k.bed
 
 
-# plot of WSR repeats
+bsub.py 10 mash_dist "mash dist SM_V10_WSR.10k.fa SM_V10_WSR.10k.fa"
+
+grep "^SM_V10" mash_dist.o > mash_dist.txt
+
+cat mash_dist.txt | awk '{sub(/-/, "\t", $2)}2' | awk '{sub(/:/, "\t", $2)}2' | awk '{sub(/-/, "\t", $1)}1' | awk '{sub(/:/, "\t", $1)}1' OFS="\t" > mash_dist_coords.txt
+
+```
+
+
+### plot of WSR repeats
 ```R  
+# load libraries
 library(tidyverse)
 library(RColorBrewer)
+library(patchwork)
+library(viridis)
 
-data <- read.table("combined_repeats_SD22022_to_v9.WSR.coords", header=F)
+data1 <- read.table("combined_repeats_SD22022_to_v10.WSR.coords", header=F)
 
 # set colours
 n <- 39
 qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
 col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 
-ggplot(data, aes(V1,fill=V13)) +
+plot1 <- ggplot(data1, aes(V1,fill=V13)) +
      geom_histogram(binwidth=10000) +
      theme_bw() +
      scale_fill_manual(values=col_vector) +
-     labs(fill="Repeat", x="Chromosome position (bp)", y="Repeat count")
-
-ggsave("WSR_repeats.pdf", width=7, height=5)
-ggsave("WSR_repeats.png")
-```
-![](../04_analysis/WSR_repeats.png)
-
-- plot shows repeat density per 10kb window, coloured by repeat type
+     labs(title="A", fill="Repeat ID", y="Repeat count", x="") +
+     theme(legend.key.size = unit(0.3, 'cm')) +
+     theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank())
+     
 
 
 
+data2 <- read.table("mash_dist_coords.txt")
 
+plot2 <- ggplot(data2, aes(V3/1e6, V6/1e6, fill=V7)) + 
+    geom_tile() + 
+    scale_fill_viridis(direction = 1) +
+    labs(title="B", x="WSR position (Mb)", y="WSR position (Mb)", fill="Similarity\n(mash distance)") +
+    theme_bw() 
 
-## Normalising coverage to estimate copy number of gene family arrays: IPSE and OMEGA
+plot1 + plot2 + plot_layout(ncol=1, heights = c(1, 2)) 
 
-### IPSE
-```bash
-
-# ISPE coverage using samtools
-cat mb_IPSE.gff | awk '{print $1,$4,$5,$9}' OFS="\t" > mb_IPSE.bed
-
-samtools bedcov mb_IPSE.bed 6520_5_1_sorted.bam > mb_IPSE.coverage2
-
-cat mb_IPSE.coverage2 | awk '{print $1,$2,$3,$4,$5/($3-$2)}' OFS="\t" | datamash median 5
-#>53.7555
-
-53.7555/44.6 = 1.21x higher coverage in region
-
-16 * 1.21 = 20 likely copies of IPSE based on normalising coverage
-```
-
-### OMEGA
-```
-# OMEGA coverage using samtools
-cat mb_omega.gff | awk '{print $1,$4,$5,$9}' OFS="\t" > mb_omega.bed
-
-samtools bedcov mb_omega.bed 6520_5_1_sorted.bam > mb_omega.coverage
-
-cat mb_omega.coverage | awk '{print $1,$2,$3,$4,$5/($3-$2)}' OFS="\t" | datamash median 5
-
-#> 78.35955/44.6 = 1.76x higher coverage in region
-
-#> 5 copies * 1.76x = 8.8 likely copies of omega based on normalising coverage
-#--- note - there are 7 copies of omega in this region, but only 5 are in a high coverage area. Two copies are not. See Supplementary Figure 1C
-#--- therefore: 8.8 normalised copies + 2 addition copies =  10.8 copies, ~11 copies reported in the paper.
+ggsave("WSR_repeats.pdf", width=7, height=8)
 
 ```
 
 
 
-
-```R
-
-library(tidyverse)
-library(patchwork)
-
-data <- read.table("V7W_vs_V9_mum.filtered.coords", header=F)
-rep_data <- read.table("W_repeat_data.txt", header=T, sep="\t")
-genes_data <- read.table("../WSR_genes.bed", header=F)
-
-
-# dotplot
-ggplot(data) + geom_segment(aes(x=V1, y=V1+V3, xend=V2, yend=V1+V4, col=V11), size=1) + theme_bw() + labs(x="SM_V9_WSR", y="W scaffolds from V7", col="W scaffolds from V7")
-
-
-
-
-
-
-data2 <- data %>% group_by(V11) %>% mutate(group_id = median(V1))
-rep_data2 <- rep_data %>% group_by(Repeat.name) %>% mutate(group_id = median(V1))
-
-plot_v7w <- ggplot(data2) +
-     geom_segment(aes(x=V1, xend=V2, y=as.factor(group_id), yend=as.factor(group_id), col=V11), size=3) +
-     theme_bw() + theme(legend.position="none", axis.text.y = element_blank()) +
-     labs(title="V7 W scaffolds", y="", x="Genomic position on V9 W scaffold (bp)")
-
-plot_rep <- ggplot(rep_data2) +
-     geom_segment(aes(x=START, xend=END, y=reorder(group_id,START), yend=reorder(group_id,START), col=Repeat.name), size=3) +
-     theme_bw() + theme(legend.position="none", axis.text.y = element_blank()) +
-     labs(title="Repeats", y="", x="Genomic position on V9 W scaffold (bp)")
-
-plot_genes <- ggplot(genes_data) +
-     geom_segment(aes(x=V2, xend=V3, y=V4, yend=V4, col=V5), size=3) +
-     theme_bw() + theme(legend.position="none") +
-     labs(title="V9 W genes", y="Strand", x="Genomic position on V9 W scaffold (bp)")
-
-plot_v7w + plot_rep + plot_genes + plot_layout(ncol=1)
-
-
-
-```
 
 
 ### Mapping the W7 contigs to the new genome assembly
@@ -209,3 +160,16 @@ ggsave("WSR_construction_V7_to_V9.pdf", width=14, height=4)
 
 ```
 ![](../04_analysis/WSR_construction_V7_to_V9.png)
+
+
+
+
+## Using the repeat coordinates to calculate the repeat coverage
+```bash
+# bedtools to calculate coverage in repeats
+bedtools multicov -bams 6520_5_1_sorted.bam -bed combined_repeats_SD220223.bed > combined_repeats_SD220223.coverage
+
+# multiply the number of reads by read length, and divide by length of array
+cat combined_repeats_SD220223.coverage | awk '{print $5*100/($3-$2)}'
+
+```
