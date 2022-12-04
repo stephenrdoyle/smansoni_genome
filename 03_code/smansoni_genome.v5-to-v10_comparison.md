@@ -3,7 +3,6 @@
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 
-
 ```bash
 # working directory
 cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/V5_vs_V10
@@ -178,16 +177,7 @@ while read V5_GENE V10_GENE; do
      echo -e ${V5_GENE}"\t"${V10_GENE}"\t"${LENGTH}"\t"${IDENTITY}"\t"${SIMILARITY}"\t"${GAPS}"\t"${SCORE} >> V5_V10_1-2-1.genes.needle-comparison.txt;
      done < V5_V10_1-2-1.genes.txt
 
-
-
 ```
-
-
-
-
-
-
-
 
 
 

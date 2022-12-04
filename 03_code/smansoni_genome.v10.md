@@ -4,11 +4,6 @@
 
 
 
-
-
-
-
-
 ## Chromosome 1
 ### merge original and updated annotations from apollo
 ```bash
