@@ -385,4 +385,4 @@ ggsave("figure_V5vV10_zchromosome_coverage_synteny.pdf", height=100, width=170, 
 ggsave("figure_V5vV10_zchromosome_coverage_synteny.png")
 
 ```
-![](../04_analysis/figure_V5vV10_zchromosome_coverage_synteny.png)
+![](../04_analysis/figure_V5vV10_zchromosome_coverage_synteny2.png)
