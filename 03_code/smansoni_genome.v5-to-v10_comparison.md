@@ -117,6 +117,8 @@ cat V5_2_V10_same_split_merged.txt | datamash -t "," sum 4 sum 7
 bedtools intersect -v -s -a V10.clean_annotation.gff3 -b V5_to_V10.liftoff.gff3 | awk '$3=="gene" {print}' | wc -l
 #> 1147
 
+bedtools intersect -v -s -a V10.clean_annotation.gff3 -b V5_to_V10.liftoff.gff3 | awk -F'[\t;]' '$3=="gene" {print "new_gene", $9, $1, $4,$5, $7}' OFS="\t" | sed 's/ID=//g' > V10.new-genes.txt
+
 ```
 
 - Summary of genes 
@@ -380,5 +382,7 @@ nucmer_plot <- ggplot(nucmer_data) +
 plot_cov_v5 + nucmer_plot + plot_cov_v10 + plot_layout(ncol=1, heights =c(2, 1, 2) )
 
 ggsave("figure_V5vV10_zchromosome_coverage_synteny.pdf", height=100, width=170, units="mm")
+ggsave("figure_V5vV10_zchromosome_coverage_synteny.png")
 
 ```
+![](../04_analysis/figure_V5vV10_zchromosome_coverage_synteny.png)
