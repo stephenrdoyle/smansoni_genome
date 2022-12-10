@@ -183,3 +183,90 @@ bsub.py --threads 10 20 busco_srodhaini.PRJEB526.WBPS17_genome "busco --in schis
 
 ```
 
+## schistosoma_japonicum
+```bash 
+# paper: https://www.sciencedirect.com/science/article/pii/S2211124722003904
+
+fastaq enumerate_names --suffix _scaffold /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/sjaponicum_GCA_021461655.1_ASM2146165v1_genomic.fasta sjaponicum_GCA_021461655.1_ASM2146165v1_genomic.renamed.fasta
+
+gffread -y sjaponicum_GCA_021461655.1_ASM2146165v1.protein.fa -g /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/sjaponicum_GCA_021461655.1_ASM2146165v1_genomic.fasta /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/sjaponicum_GCA_021461655.1_ASM2146165v1_genomic.gff
+
+
+# genome
+bsub.py --threads 10 20 busco_sjaponicum_GCA_021461655.1_ASM2146165v1_genome "busco --in /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/BUSCO/sjaponicum_GCA_021461655.1_ASM2146165v1_genomic.renamed.fasta --out sjaponicum_GCA_021461655.1_ASM2146165v1_genome --mode genome --lineage_dataset ~sd21/lustre118_link/databases/busco/eukaryota_odb10 --cpu 10 -f"
+
+	C:87.9%[S:85.9%,D:2.0%],F:7.1%,M:5.0%,n:255
+	224	Complete BUSCOs (C)
+	219	Complete and single-copy BUSCOs (S)
+	5	Complete and duplicated BUSCOs (D)
+	18	Fragmented BUSCOs (F)
+	13	Missing BUSCOs (M)
+	255	Total BUSCO groups searched
+
+# protein
+bsub.py --threads 10 20 busco_sjaponicum_GCA_021461655.1_ASM2146165v1_protein "busco --in sjaponicum_GCA_021461655.1_ASM2146165v1.protein.fa --out sjaponicum_GCA_021461655.1_ASM2146165v1_protein --mode protein --lineage_dataset ~sd21/lustre118_link/databases/busco/eukaryota_odb10 --cpu 10 -f"
+
+	C:89.8%[S:30.2%,D:59.6%],F:4.7%,M:5.5%,n:255
+	229	Complete BUSCOs (C)
+	77	Complete and single-copy BUSCOs (S)
+	152	Complete and duplicated BUSCOs (D)
+	12	Fragmented BUSCOs (F)
+	14	Missing BUSCOs (M)
+	255	Total BUSCO groups searched
+```
+
+
+
+## schistosoma mansoni V9 - WBPSv17
+```bash
+
+fastaq enumerate_names --suffix _scaffold /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/schistosoma_mansoni.PRJEA36577.WBPS17.genomic.fa schistosoma_mansoni.PRJEA36577.WBPS17.renamed.fasta
+
+gffread -y schistosoma_mansoni.PRJEA36577.WBPS17.protein.fa -g /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/schistosoma_mansoni.PRJEA36577.WBPS17.genomic.fa /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/schistosoma_mansoni.PRJEA36577.WBPS17.annotations.gff3
+
+# genome
+bsub.py --threads 10 20 busco_schistosoma_mansoni.PRJEA36577.WBPS17_genome "busco --in /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/BUSCO/schistosoma_mansoni.PRJEA36577.WBPS17.renamed.fasta --out schistosoma_mansoni.PRJEA36577.WBPS17_genome --mode genome --lineage_dataset ~sd21/lustre118_link/databases/busco/eukaryota_odb10 --cpu 10 -f"
+
+	C:89.4%[S:88.6%,D:0.8%],F:4.3%,M:6.3%,n:255
+	228	Complete BUSCOs (C)
+	226	Complete and single-copy BUSCOs (S)
+	2	Complete and duplicated BUSCOs (D)
+	11	Fragmented BUSCOs (F)
+	16	Missing BUSCOs (M)
+	255	Total BUSCO groups searched
+
+# protein
+bsub.py --threads 10 20 busco_schistosoma_mansoni.PRJEA36577.WBPS17_protein "busco --in schistosoma_mansoni.PRJEA36577.WBPS17.protein.fa --out schistosoma_mansoni.PRJEA36577.WBPS17_protein --mode protein --lineage_dataset ~sd21/lustre118_link/databases/busco/eukaryota_odb10 --cpu 10 -f"
+
+	C:94.9%[S:77.3%,D:17.6%],F:2.0%,M:3.1%,n:255
+	242	Complete BUSCOs (C)
+	197	Complete and single-copy BUSCOs (S)
+	45	Complete and duplicated BUSCOs (D)
+	5	Fragmented BUSCOs (F)
+	8	Missing BUSCOs (M)
+	255	Total BUSCO groups searched
+```
+
+
+## schistosoma mansoni V7 - WBPSv15
+```bash
+
+fastaq enumerate_names --suffix _scaffold /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/schistosoma_mansoni.PRJEA36577.WBPS15.genomic.fa schistosoma_mansoni.PRJEA36577.WBPS15.renamed.fasta
+
+gffread -y schistosoma_mansoni.PRJEA36577.WBPS15.protein.fa -g /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/schistosoma_mansoni.PRJEA36577.WBPS15.genomic.fa /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/OTHER_SCHISTO_GENOMES/schistosoma_mansoni.PRJEA36577.WBPS15.annotations.gff3
+
+# genome
+bsub.py --threads 10 20 busco_schistosoma_mansoni.PRJEA36577.WBPS15_genome "busco --in /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/BUSCO/schistosoma_mansoni.PRJEA36577.WBPS15.renamed.fasta --out schistosoma_mansoni.PRJEA36577.WBPS15_genome --mode genome --lineage_dataset ~sd21/lustre118_link/databases/busco/eukaryota_odb10 --cpu 10 -f"
+
+
+# protein
+bsub.py --threads 10 20 busco_schistosoma_mansoni.PRJEA36577.WBPS15_protein "busco --in schistosoma_mansoni.PRJEA36577.WBPS15.protein.fa --out schistosoma_mansoni.PRJEA36577.WBPS15_protein --mode protein --lineage_dataset ~sd21/lustre118_link/databases/busco/eukaryota_odb10 --cpu 10 -f"
+
+	C:95.3%[S:76.5%,D:18.8%],F:2.0%,M:2.7%,n:255
+	243	Complete BUSCOs (C)
+	195	Complete and single-copy BUSCOs (S)
+	48	Complete and duplicated BUSCOs (D)
+	5	Fragmented BUSCOs (F)
+	7	Missing BUSCOs (M)
+	255	Total BUSCO groups searched
+```

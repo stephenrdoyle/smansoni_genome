@@ -2,6 +2,12 @@
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
+- workflow describing changes per chromosome in the genome and annotation from V9 to V10
+
+```bash
+# working dir:
+cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/GENOME_FIX_V10
+```
 
 
 ## Chromosome 1
@@ -15,7 +21,6 @@ cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/GENOME_FIX_V10/${CHR
 
 
 samtools faidx ../${GENOME} ${CHROMOSOME} > ${CHROMOSOME}.fa
-
 
 
 # apollo annotations saved as "chr1_v9.apollo.gff3.gz"

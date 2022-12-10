@@ -2,6 +2,8 @@
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
+- comparison of annotations between previously published V5 and current V10 genomes
+- identification of gene that have be conserved, and those that have changed and how
 
 ```bash
 # working directory

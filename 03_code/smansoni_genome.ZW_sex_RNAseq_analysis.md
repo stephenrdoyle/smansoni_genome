@@ -261,7 +261,7 @@ for i in *bam; do
 ```bash
 cd /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/RNASEQ/STRINGTIE
 
-# removed the 7th exon on Smp_323380 to account for a misassembly artefact on the Z gaemtolog thats causing false expression on the W in male samples
+# removed the 8th exon on Smp_323380 to account for a misassembly artefact on the Z gaemtolog thats causing false expression on the W in male samples
 cat /nfs/users/nfs_s/sd21/lustre118_link/schistosoma_mansoni/V10/REF/SM_V10.annotation.preWBP18checked.gff3 | grep -vP "SM_V10_WSR\tWormBase_imported\tCDS\t3511322\t3511408" | grep -vP "SM_V10_WSR\tWormBase_imported\texon\t3511322\t3512557" > SM_V10.WSR_Smp_323380modified.gff3
 
 # fixed the gene ID of Smp_324690 - pseudogenes didnt get renamed properly in the V10 annotation update
