@@ -1,6 +1,6 @@
+# Schistosoma mansoni V10 genome: Z chromosome strata
 
-
-
+### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
 
 
@@ -78,35 +78,3 @@ ggsave("figure_Zchromosome_strata.pdf", height=4.5, width=5.5, units="in")
 ggsave("figure_Zchromosome_strata.png")
 ```
 ![](../04_analysis/figure_Zchromosome_strata.png)
-
-
-# shift in african/ancestral coords reveals new genes in the ancestral segment
-SM_V10_Z	WormBase_imported	gene	24067987	24087834	.	-	.	ID=Smp_036500;Name=Smp_036500; 
-- CAR; CAR; CAR; Putative nuclear receptor nhr-48; Putative nuclear receptor nhr-48
-
-SM_V10_Z	WormBase_imported	gene	24223697	24231591	.	+	.	ID=Smp_036550;Name=Smp_036550;
--na 
-
-SM_V10_Z	WormBase_imported	gene	24381150	24387201	.	+	.	ID=Smp_036590;Name=Smp_036590;
-- Putative polypyrimidine tract binding protein [Source:UniProtKB/TrEMBL;Acc:A0A3Q0KEH4]
-
-SM_V10_Z	WormBase_imported	gene	24460330	24472981	.	+	.	ID=Smp_036630;Name=Smp_036630;
-- Putative spry domain containing socs box protein [Source:UniProtKB/TrEMBL;Acc:G4VQG2]
-
-SM_V10_Z	WormBase_imported	gene	24502290	24505225	.	+	.	ID=Smp_036670;Name=Smp_036670;
-- nq
-
-SM_V10_Z	WormBase_imported	gene	23465137	23489986	.	-	.	ID=Smp_133530;Name=Smp_133530;
-- WW domain-containing protein [Source:UniProtKB/TrEMBL;Acc:A0A3Q0KM97]
-
-SM_V10_Z	WormBase_imported	gene	23847813	23866058	.	+	.	ID=Smp_134980;Name=Smp_134980;
-- Putative oxalate:formate antiporter [Source:UniProtKB/TrEMBL;Acc:A0A3Q0KMF3]
-
-SM_V10_Z	WormBase_imported	gene	23731132	23752646	.	-	.	ID=Smp_135010;Name=Smp_135010;
-- Putative oxalate:formate antiporter [Source:UniProtKB/TrEMBL;Acc:A0A3Q0KME7]
-
-SM_V10_Z	WormBase_imported	gene	23654750	23671812	.	+	.	ID=Smp_135020;Name=Smp_135020;
-- Putative oxalate:formate antiporter [Source:UniProtKB/TrEMBL;Acc:A0A3Q0KMB4]
-
-SM_V10_Z	WormBase_imported	gene	23940887	24012524	.	+	.	ID=Smp_141810;Name=Smp_141810;
-- na
