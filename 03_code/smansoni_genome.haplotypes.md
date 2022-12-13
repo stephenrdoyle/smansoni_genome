@@ -316,4 +316,81 @@ bsub.py 2 samtools_get_unique "samtools view -b -F 256 -q 255  -o star_haplotype
 # run stringtie to get TPM per gene
 module load stringtie/2.1.4--h7e0af3c_0
 
-bsub.py 10 --threads 5 stringtie "stringtie star_haplotypeAligned.sortedByCoord.unique.bam -G V10_plus_SM_V8_6_Haplotype003.gff -p 5 -A stringtie.star_haplotypeAligned.abund.out"
+bsub.py 10 --threads 5 stringtie "stringtie star_haplotypeAligned.sortedByCoord.unique.bam -G V10_plus_SM_V8_6_Haplotype003.gff -p 5 -A stringtie.star_haplotypeAligned.abund.out"\
+```
+
+
+
+
+
+## Map a synteny plot between haplotype and chromosomes
+```bash
+# run minimap
+~sd21/bash_scripts/run_minimap2syntenyplot.sh SM_V10.genome.preWBP18checked.fa SM_V9_haplotypes.fa
+
+# once finished, extract data for plotting
+cat SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.layout.txt | cut -f1-19 > SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.layout.v2.txt
+```
+
+
+where "~sd21/bash_scripts/run_minimap2syntenyplot.sh" is: 
+- note: the script is a bit broken (old), so have used the intermediate files and plotted manually below
+```bash
+#!/usr/bin/env bash
+
+# ========================================================================================
+# run_minimap2syntenyplot.sh
+#
+# Quick synteny plots comparing two genomes using minimap
+#
+# Reference:
+# Software: https://github.com/zeeev/minimap
+#
+# Usage: ~sd21/bash_scripts/run_minimap2syntenyplot.sh <TARGET> <QUERY>
+#
+# @authors
+# Stephen Doyle <sd21@sanger.ac.uk>
+#
+# ----------------------------------------------------------------------------------------
+
+
+target=$1
+query=$2
+
+# run minimap
+#/nfs/users/nfs_s/sd21/lustre118_link/software/GENOME_ASSEMBLY/minimap/minimap $target $query > ${target%.fa*}_vs_${query%.fa*}.mini
+minimap2 -x asm10 $target $query > ${target%.fa*}_vs_${query%.fa*}.mini
+
+# parse minimap output and plot comparison
+cat ${target%.fa*}_vs_${query%.fa*}.mini | /nfs/users/nfs_s/sd21/lustre118_link/software/GENOME_ASSEMBLY/minimap/utils/bin/layout > ${target%.fa*}_vs_${query%.fa*}.layout.txt
+
+Rscript --vanilla /nfs/users/nfs_s/sd21/lustre118_link/software/GENOME_ASSEMBLY/minimap/utils/plot/plotLayout.R -f ${target%.fa*}_vs_${query%.fa*}.layout.txt -p ${target%.fa*}_vs_${query%.fa*}.miniplot.pdf
+
+```
+
+# make a plot
+```R
+
+library(tidyverse)
+libraery(viridis)
+
+
+data<-read.table("SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.layout.v2.txt")
+data<-data[data$V17 > 10000, ]
+tdata<-data[data$V17 > 10000,  ]
+vdata<-aggregate(data$V5, by=list(data$V4), max)
+
+ggplot()+
+     geom_segment(data=data,mapping=aes(y=V2/1e6, yend=V3/1e6, x=V5/1e6, xend=V6/1e6, colour=V4)) +
+     theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+     geom_point(data=tdata, aes(x=V5/1e6, y=V2/1e6, colour=V4), size=1)+
+     geom_point(data=tdata, aes(x=V6/1e6, y=V3/1e6, colour=V4), size=1)+
+     geom_vline(xintercept=vdata$x/1e6, linetype="longdash", col="lightgrey") +
+     labs(x="SM_V10 chromosomes (cumulative genome size [Mb])", y="Haplotypes (cumulative size [Mb])", colour="Chromosome")+
+     scale_colour_viridis(discrete = TRUE)
+
+ggsave("figure_haplotypes_mapped_to_chromosomes.pdf", height=5.5, width=7, units="in")
+ggsave("figure_haplotypes_mapped_to_chromosomes.png")
+
+```
+![](../04_analysis/figure_haplotypes_mapped_to_chromosomes.png)
