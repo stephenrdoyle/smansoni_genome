@@ -233,6 +233,16 @@ while read V9haplo_GENE V10_GENE; do
      echo -e ${V9haplo_GENE}"\t"${V10_GENE}"\t"${LENGTH}"\t"${IDENTITY}"\t"${SIMILARITY}"\t"${GAPS}"\t"${SCORE} >> V9haplo_V10_1-2-1.genes.needle-comparison.txt;
      done < V9haplo_V10_1-2-1.genes.txt
 
+
+
+# get the coordinates for the haplotypic gene and its corresponding gene in the chromosomes
+echo -e HAPLOTIG_GENE","HAPLOTIG","START","END","STRAND","V10_GENE","CHROMOSOME","START","END","STRAND","LENGTH","IDENTITY","SIMILARITY","GAPS","SCORE > V9haplo_V10_1-2-1.genes.needle-comparison.coords.txt
+while read -r V9haplo_GENE V10_GENE LENGTH IDENTITY SIMILARITY GAPS SCORE; do
+     V9gene_coords=$(grep "$V9haplo_GENE" SM_V9_haplotypes.gff | awk '$3=="gene" {print $1,$4,$5,$7}' OFS=",")
+     V10gene_coords=$(grep "$V10_GENE" ../REF/SM_V10.annotation.preWBP18checked.gff3 | awk '$3=="gene" {print $1,$4,$5,$7}' OFS=",")
+     echo -e $V9haplo_GENE","$V9gene_coords","$V10_GENE","$V10gene_coords","$LENGTH","$IDENTITY","$SIMILARITY","$GAPS","$SCORE >> V9haplo_V10_1-2-1.genes.needle-comparison.coords.txt;
+     done < V9haplo_V10_1-2-1.genes.needle-comparison.txt
+
 ```
 
 
@@ -394,3 +404,11 @@ ggsave("figure_haplotypes_mapped_to_chromosomes.png")
 
 ```
 ![](../04_analysis/figure_haplotypes_mapped_to_chromosomes.png)
+
+
+
+
+
+
+
+
