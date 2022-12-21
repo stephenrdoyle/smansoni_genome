@@ -30,6 +30,7 @@ bedtools makewindows -g SM_V10_WSR.genome -w 10000 > SM_V10_WSR.10k.bed
 
 bedtools getfasta -fi SM_V10_WSR.fa -fo SM_V10_WSR.10k.fa -bed SM_V10_WSR.10k.bed
 
+module load mash/2.1.1--he518ae8_0
 
 bsub.py 10 mash_dist "mash dist SM_V10_WSR.10k.fa SM_V10_WSR.10k.fa"
 

@@ -459,6 +459,92 @@ ggsave("W_Z_gametologues_RNAseq.png")
 
 
 
+cat ../../REF/SM_V10.annotation.preWBP18checked.gff3 | grep "SM_V10_Z" | awk -F '[\t;]' '$3=="gene" {print $9}' | sed 's/ID=//g' > all_z_genes.list
+
+> sex.stage.all_z_genes.data.txt
+n=0
+while read GENE; do \
+     n=$((n + 1)); \
+     for STAGE in mCer_1_abund.out \
+          mCer_2_abund.out \
+          mSom1_1_abund.out \
+          mSom1_2_abund.out \
+          mSom2_1_abund.out \
+          mSom2_2_abund.out \
+          mSom3_1_abund.out \
+          mSom3_2_abund.out \
+          mAduPair_1_abund.out \
+          mAduPair_2_abund.out \
+          mAduPair_3_abund.out \
+          mAduUnpair_1_abund.out \
+          mAduUnpair_2_abund.out \
+          mAduUnpair_3_abund.out \
+          fCer_1_abund.out \
+          fCer_2_abund.out \
+          fSom1_1_abund.out \
+          fSom1_2_abund.out \
+          fSom2_1_abund.out \
+          fSom2_2_abund.out \
+          fSom3_1_abund.out \
+          fSom3_2_abund.out \
+          fAduPair_1_abund.out \
+          fAduPair_2_abund.out \
+          fAduPair_3_abund.out \
+          fAduUnpair_1_abund.out \
+          fAduUnpair_2_abund.out \
+          fAduUnpair_3_abund.out; do
+               SEX=$(echo ${STAGE} | cut -c1) ;
+               grep "${GENE}" ${STAGE} |\
+               awk -v COUNT=${n} -v STAGE=${STAGE%_abund.out} -v SEX=${SEX} '{print SEX,STAGE,$1,$9,COUNT}' OFS="\t" \
+               >> sex.stage.all_z_genes.data.txt;
+               done ;
+          done < all_z_genes.list
+
+
+
+library(tidyverse)
+library(pheatmap)
+
+male <- read.table("male_sex.stage.all_z_genes.data.txt")
+female <- read.table("female_sex.stage.all_z_genes.data.txt")
+
+male <- male %>% mutate(stage = str_remove(V2, "^m"))
+female <- female %>% mutate(stage = str_remove(V2, "^f"))
+
+
+data<- full_join(male, female, by=c("V3","stage"))
+data <- data %>% mutate(diff = log10(V4.x/V4.y))
+
+
+data2 <- data %>% select("V3","stage","diff")
+
+data3 <- spread(data2,key=stage, value=diff)
+
+data3 <- data3 %>% mutate_all(function(x) ifelse(is.infinite(x), 0, x))
+data3[is.na(data3)] <- 0
+data3 <- column_to_rownames(data3, "V3")
+data3 <- data3 %>% select('Cer_1', 'Cer_2', 'Som1_1', 'Som1_2', 'Som2_1', 'Som2_2', 'Som3_1', 'Som3_2', 'AduPair_1','AduPair_2','AduPair_3','AduUnpair_1','AduUnpair_2','AduUnpair_3')
+
+
+pheatmap(data3, cluster_cols=FALSE, show_rownames=FALSE)
+
+data4 <- filter(data3, Cer_1> 1.5 & Cer_2> 1.5 | Cer_1< -1.5 & Cer_2< -1.5)
+data4 <- filter(data3, Cer_1> 1 & Cer_2> 1 | Cer_1< -1 & Cer_2< -1)
+pheatmap(data4, cluster_cols=FALSE)
+
+
+
+ggplot(data) +
+     geom_tile(aes(factor(stage, level=level_order),reorder(V3, -diff),fill=diff)) +
+     scale_fill_gradient2(low = 'blue', mid = 'white', high = 'red') +
+     theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1))
+
+
+          facet_grid(.~V1, scales="free_x", labeller = labeller(V1 = labels)) +
+          scale_fill_viridis() +
+          theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
+          labs(y="", x="", fill="log(TPM)", title="W gametologues") +
+          scale_y_discrete(position = "right")
 
 
 

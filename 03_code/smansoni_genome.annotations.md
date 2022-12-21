@@ -36,3 +36,29 @@ makeblastdb -in SM_V7_CDS.fa -parse_seqids -dbtype nucl
 blastn -db SM_V7_CDS.fa -query SM_V9_CDS.fa -outfmt 6 -out V7vV9.result.txt
 
 ```
+
+
+## UTRs
+```bash
+GFF=SM_V10.annotation.preWBP18checked.gff3
+> coding.length
+
+for MRNA in ` awk -F '[\t]' '$3=="mRNA" {print $9}'  SM_V10.annotation.preWBP18checked.gff3 | grep -Po "ID=Smp_........" | sed -e 's/ID=//g'`; do
+     chr=$( grep ${MRNA} ${GFF} | grep -v "#" |  head -n1 | cut -f1 );
+     gene_start=$(grep ${MRNA} ${GFF} | grep -v "#" | awk '$3=="mRNA" {print}' | head -n1 | awk '{print $4}') ;
+     gene_end=$(grep ${MRNA} ${GFF} | grep -v "#" | awk '$3=="mRNA" {print}' | head -n1 | awk '{print $5}');
+     strand=$(grep ${MRNA} ${GFF} | grep -v "#" | head -n1 | cut -f7 );
+     if [[ ${strand}=="+" ]]; then
+     cds1=$(grep ${MRNA} ${GFF} | grep -v "#" | awk '$3=="CDS" {print}' | head -n1 | awk '{print $4}');
+     cds2=$(grep ${MRNA} ${GFF} | grep -v "#" | awk '$3=="CDS" {print}' | tail -n1 | awk '{print $5}');
+     else
+     cds1=$(grep ${MRNA} ${GFF} | grep -v "#" | awk '$3=="CDS" {print}' | tail -n1 | awk '{print $4}');
+     cds2=$(grep ${MRNA} ${GFF} | grep -v "#" | awk '$3=="CDS" {print}' | head -n1 | awk '{print $5}');
+     fi;
+     five_utr=$(echo "$cds1 - $gene_start" | bc);
+     three_utr=$(echo "$gene_end - $cds2" | bc);
+     echo -e "$chr\t$gene_start\t$gene_end\t$cds1\t$cds2\t$five_utr\t$three_utr\t$MRNA\t.\t$strand" >> coding.length; done &
+
+number=$(wc -l coding.length); count1=$(awk '{if($6>0) print}' coding.length | wc -l); count2=$(awk '{if($7>0) print}' coding.length | wc -l); echo -e "$number\t$count1\t$count2"
+
+```
