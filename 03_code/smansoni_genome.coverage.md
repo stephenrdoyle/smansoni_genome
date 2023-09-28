@@ -75,7 +75,7 @@ cov_median <- median(cov$V4/500)
 
 # make some plots
 plot_nuc <- ggplot(nuc) +
-     geom_line(aes(V2, V5), size=0.75) +
+     geom_line(aes(V2, V5), size=0.5) +
      xlim(39.4e6, 39.75e6) +
      ylim(0.2, 0.6) +
      theme_bw() + guides(x = "none") +
@@ -83,7 +83,7 @@ plot_nuc <- ggplot(nuc) +
      geom_hline(yintercept=nuc_median, linetype="dashed")
 
 plot_cov <- ggplot(cov) +
-     geom_line(aes(V2, V4/500), size=0.75) +
+     geom_line(aes(V2, V4/500), size=0.5) +
      xlim(39.4e6, 39.75e6) +
      ylim(0, 3000) +
      theme_bw() + guides(x = "none") +
@@ -101,9 +101,9 @@ plot_feature <- ggplot() +
 
 
 # combine into multipanel
-plot_nuc + plot_cov + plot_feature + plot_layout(ncol=1, heights=c(3,3,1))
+plot_nuc + plot_cov + plot_feature + plot_layout(ncol=1, heights=c(3,3,0.5))
 
-ggsave("figure_NOR.gc.coverage.pdf", height=100, width=170, units="mm")
+ggsave("figure_NOR.gc.coverage.pdf", height=90, width=170, units="mm")
 ggsave("figure_NOR.gc.coverage.png")
 ```
 ![](../04_analysis/figure_NOR.gc.coverage.png)
@@ -135,14 +135,14 @@ cov_median <- median(cov$V4/500)
 
 # make some plots
 plot_nuc <- ggplot(nuc) +
-     geom_line(aes(V2, V5), linewidth=0.75) +
+     geom_line(aes(V2, V5), linewidth=0.5) +
      xlim(7090000, 7280000) +
      ylim(0.2, 0.6) +
      theme_bw() + guides(x = "none") + labs(x="", y="GC Content", title="IPSE") +
      geom_hline(yintercept=nuc_median, linetype="dashed")
 
 plot_cov <- ggplot(cov) +
-     geom_line(aes(V2, V4/500), linewidth=0.75) +
+     geom_line(aes(V2, V4/500), linewidth=0.5) +
      xlim(7090000, 7280000) + ylim(0,200) +
      theme_bw() + guides(x = "none") +
      labs(x="", y="Coverage")  +
@@ -157,9 +157,9 @@ plot_gene <- ggplot() +
      labs(x="Genome position (bp)", y="")
 
 # combine into multipanel
-plot_nuc + plot_cov + plot_gene + plot_layout(ncol=1, heights=c(3,3,1))
+plot_nuc + plot_cov + plot_gene + plot_layout(ncol=1, heights=c(3,3,0.5))
 
-ggsave("figure_IPSE.gc.coverage.pdf", height=100, width=170, units="mm")
+ggsave("figure_IPSE.gc.coverage.pdf", height=90, width=170, units="mm")
 ggsave("figure_IPSE.gc.coverage.png")
 ```
 ![](../04_analysis/figure_IPSE.gc.coverage.png)
@@ -188,14 +188,14 @@ cov_median <- median(cov$V4/500)
 
 # make some plots
 plot_nuc <- ggplot(nuc) +
-     geom_line(aes(V2, V5), size=0.75) +
+     geom_line(aes(V2, V5), size=0.5) +
      xlim(3620000, 3880000) +
      ylim(0.2, 0.6) +
      theme_bw() + guides(x = "none") + labs(x="", y="GC Content", title="omega") +
      geom_hline(yintercept=nuc_median, linetype="dashed")
 
 plot_cov <- ggplot(cov) +
-     geom_line(aes(V2, V4/500), size=0.75) +
+     geom_line(aes(V2, V4/500), size=0.5) +
      xlim(3620000, 3880000) +
      ylim(0, 150) +
      theme_bw() + guides(x = "none") + labs(x="", y="Coverage")  +
@@ -210,9 +210,9 @@ plot_gene <- ggplot() +
      labs(x="Genome position (bp)", y="")
 
 # combine into multipanel
-plot_nuc + plot_cov + plot_gene + plot_layout(ncol=1, heights=c(3,3,1))
+plot_nuc + plot_cov + plot_gene + plot_layout(ncol=1, heights=c(3,3,0.5))
 
-ggsave("figure_omega.gc.coverage.pdf", height=100, width=170, units="mm")
+ggsave("figure_omega.gc.coverage.pdf", height=90, width=170, units="mm")
 ggsave("figure_omega.gc.coverage.png")
 ```
 ![](../04_analysis/figure_omega.gc.coverage.png)
