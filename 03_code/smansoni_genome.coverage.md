@@ -65,11 +65,11 @@ library(tidyverse)
 library(patchwork)
 
 # load nucleotide frequency data, and calculate median GC
-nuc <- read.table("../COV/SM_V9_2.500b.nucfreq", header=F)
+nuc <- read.table("SM_V9_2.500b.nucfreq", header=F)
 nuc_median <- median(nuc$V5)
 
 # load coverage data, and calculate median coverage
-cov <- read.table("../COV/SM_V9_2.500b.coverage", header=F)
+cov <- read.table("SM_V9_2.500b.coverage", header=F)
 cov_median <- median(cov$V4/500)
 
 
@@ -100,7 +100,19 @@ plot_feature <- ggplot() +
 
 # combine into multipanel
 plot_nuc + plot_cov + plot_feature + plot_layout(ncol=1, heights=c(3,3,1))
+
+ggsave("figure_NOR.gc.coverage.pdf", height=100, width=170, units="mm")
+ggsave("figure_NOR.gc.coverage.png")
 ```
+![](../04_analysis/figure_NOR.gc.coverage.png)
+
+ggsave("figure_V5vV10_zchromosome_coverage_synteny.pdf", height=100, width=170, units="mm")
+ggsave("figure_V5vV10_zchromosome_coverage_synteny.png")
+
+```
+
+
+
 
 ### IPSE plot
 ```R
