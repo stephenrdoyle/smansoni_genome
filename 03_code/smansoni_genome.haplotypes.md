@@ -374,15 +374,22 @@ minimap2 -x asm10 $target $query > ${target%.fa*}_vs_${query%.fa*}.mini
 # parse minimap output and plot comparison
 cat ${target%.fa*}_vs_${query%.fa*}.mini | /nfs/users/nfs_s/sd21/lustre118_link/software/GENOME_ASSEMBLY/minimap/utils/bin/layout > ${target%.fa*}_vs_${query%.fa*}.layout.txt
 
+
+
 Rscript --vanilla /nfs/users/nfs_s/sd21/lustre118_link/software/GENOME_ASSEMBLY/minimap/utils/plot/plotLayout.R -f ${target%.fa*}_vs_${query%.fa*}.layout.txt -p ${target%.fa*}_vs_${query%.fa*}.miniplot.pdf
 
 ```
+
+
+cat SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.layout.txt | cut -f1-19 > SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.layout.v2.txt
+
+
 
 # make a plot
 ```R
 
 library(tidyverse)
-libraery(viridis)
+library(viridis)
 
 
 data<-read.table("SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.layout.v2.txt")
@@ -407,8 +414,28 @@ ggsave("figure_haplotypes_mapped_to_chromosomes.png")
 
 
 
+cat SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.mini | awk '{if($10>10000) print}' > SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.10k.mini
+
+cat SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.10k.mini | /nfs/users/nfs_s/sd21/lustre_link/software/GENOME_ASSEMBLY/minimap/utils/bin/layout | cut -f1-19  > SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.10k.layout
+
+
+library(tidyverse)
+library(viridis)
+
+
+data<-read.table("SM_V10.genome.preWBP18checked_vs_SM_V9_haplotypes.10k.layout")
+data<-data[data$V17 > 10000, ]
+tdata<-data[data$V17 > 10000,  ]
+vdata<-aggregate(data$V5, by=list(data$V4), max)
 
 
 
+ggplot()+
+     theme_bw()+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+     geom_point(data=tdata, aes(x=((V5+V6)/2)/1e6, y=((V2+V3)/2)/1e6, colour=V4), size=1)+
+     geom_vline(xintercept=vdata$x/1e6, linetype="longdash", col="lightgrey") +
+     labs(x="SM_V10 chromosomes (cumulative genome size [Mb])", y="Relative position of haplotig [Mb]", colour="Chromosome")+
+     scale_colour_viridis(discrete = TRUE)
 
-
+ggsave("figure_haplotypes_mapped_to_chromosomes.v2.pdf",  height=5.5, width=7, units="in")
+ggsave("figure_haplotypes_mapped_to_chromosomes.v2.png")
