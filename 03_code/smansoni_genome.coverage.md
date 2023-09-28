@@ -77,6 +77,7 @@ cov_median <- median(cov$V4/500)
 plot_nuc <- ggplot(nuc) +
      geom_line(aes(V2, V5), size=0.75) +
      xlim(39.4e6, 39.75e6) +
+     ylim(0.2, 0.6) +
      theme_bw() + guides(x = "none") +
      labs(x="", y="GC Content", title="NOR") +
      geom_hline(yintercept=nuc_median, linetype="dashed")
@@ -84,6 +85,7 @@ plot_nuc <- ggplot(nuc) +
 plot_cov <- ggplot(cov) +
      geom_line(aes(V2, V4/500), size=0.75) +
      xlim(39.4e6, 39.75e6) +
+     ylim(0, 3000) +
      theme_bw() + guides(x = "none") +
      labs(x="", y="Coverage")  +
      geom_hline(yintercept=cov_median, linetype="dashed")
@@ -106,10 +108,9 @@ ggsave("figure_NOR.gc.coverage.png")
 ```
 ![](../04_analysis/figure_NOR.gc.coverage.png)
 
-ggsave("figure_V5vV10_zchromosome_coverage_synteny.pdf", height=100, width=170, units="mm")
-ggsave("figure_V5vV10_zchromosome_coverage_synteny.png")
 
-```
+
+
 
 
 
@@ -122,25 +123,26 @@ library(patchwork)
 
 # load gene data, and determine min and max coords per gene
 gene <- read.table("mb_IPSE.bed", header=F)
-gene_summary <- data %>% group_by(V5) %>% summarise(min=min(V2), max=max(V3), strand=V4)
+gene_summary <- gene %>% group_by(V5) %>% summarise(min=min(V2), max=max(V3), strand=V4)
 
 # load nucleotide frequency data, and calculate median GC
-nuc <- read.table("../COV/SM_V9_1.500b.nucfreq", header=F)
+nuc <- read.table("SM_V9_1.500b.nucfreq", header=F)
 nuc_median <- median(nuc$V5)
 
 # load coverage data, and calculate median coverage
-cov <- read.table("../COV/SM_V9_1.500b.coverage", header=F)
+cov <- read.table("SM_V9_1.500b.coverage", header=F)
 cov_median <- median(cov$V4/500)
 
 # make some plots
 plot_nuc <- ggplot(nuc) +
-     geom_line(aes(V2, V5), size=0.75) +
+     geom_line(aes(V2, V5), linewidth=0.75) +
      xlim(7090000, 7280000) +
+     ylim(0.2, 0.6) +
      theme_bw() + guides(x = "none") + labs(x="", y="GC Content", title="IPSE") +
      geom_hline(yintercept=nuc_median, linetype="dashed")
 
 plot_cov <- ggplot(cov) +
-     geom_line(aes(V2, V4/500), size=0.75) +
+     geom_line(aes(V2, V4/500), linewidth=0.75) +
      xlim(7090000, 7280000) + ylim(0,200) +
      theme_bw() + guides(x = "none") +
      labs(x="", y="Coverage")  +
@@ -156,7 +158,12 @@ plot_gene <- ggplot() +
 
 # combine into multipanel
 plot_nuc + plot_cov + plot_gene + plot_layout(ncol=1, heights=c(3,3,1))
+
+ggsave("figure_IPSE.gc.coverage.pdf", height=100, width=170, units="mm")
+ggsave("figure_IPSE.gc.coverage.png")
 ```
+![](../04_analysis/figure_IPSE.gc.coverage.png)
+
 
 
 # OMEGA plot
@@ -168,27 +175,29 @@ library(patchwork)
 
 # load gene data, and determine min and max coords per gene
 gene <- read.table("mb_omega.bed", header=F)
-gene_summary <- data %>% group_by(V5) %>% summarise(min=min(V2), max=max(V3), strand=V4)
+gene_summary <- gene %>% group_by(V5) %>% summarise(min=min(V2), max=max(V3), strand=V4)
 
 
 # load nucleotide frequency data, and calculate median GC
-nuc <- read.table("../COV/SM_V9_1.500b.nucfreq", header=F)
+nuc <- read.table("SM_V9_1.500b.nucfreq", header=F)
 nuc_median <- median(nuc$V5)
 
 # load coverage data, and calculate median coverage
-cov <- read.table("../COV/SM_V9_1.500b.coverage", header=F)
+cov <- read.table("SM_V9_1.500b.coverage", header=F)
 cov_median <- median(cov$V4/500)
 
 # make some plots
 plot_nuc <- ggplot(nuc) +
      geom_line(aes(V2, V5), size=0.75) +
      xlim(3620000, 3880000) +
+     ylim(0.2, 0.6) +
      theme_bw() + guides(x = "none") + labs(x="", y="GC Content", title="omega") +
      geom_hline(yintercept=nuc_median, linetype="dashed")
 
 plot_cov <- ggplot(cov) +
      geom_line(aes(V2, V4/500), size=0.75) +
-     xlim(3620000, 3880000) + ylim(0,200) +
+     xlim(3620000, 3880000) +
+     ylim(0, 150) +
      theme_bw() + guides(x = "none") + labs(x="", y="Coverage")  +
      geom_hline(yintercept=cov_median, linetype="dashed")
 
@@ -202,7 +211,11 @@ plot_gene <- ggplot() +
 
 # combine into multipanel
 plot_nuc + plot_cov + plot_gene + plot_layout(ncol=1, heights=c(3,3,1))
+
+ggsave("figure_omega.gc.coverage.pdf", height=100, width=170, units="mm")
+ggsave("figure_omega.gc.coverage.png")
 ```
+![](../04_analysis/figure_omega.gc.coverage.png)
 
 
 
