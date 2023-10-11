@@ -454,16 +454,18 @@ ggsave("W_Z_gametologues_RNAseq.png")
 
 
 
+### exploration of Z-biased expression
 
-
-
-
+```bash
+cd /nfs/users/nfs_s/sd21/lustre_link/schistosoma_mansoni/V10/RNASEQ/STRINGTIE
 
 cat ../../REF/SM_V10.annotation.preWBP18checked.gff3 | grep "SM_V10_Z" | awk -F '[\t;]' '$3=="gene" {print $9}' | sed 's/ID=//g' > all_z_genes.list
 
+cat ../../REF/SM_V10.annotation.preWBP18checked.gff3 | grep "SM_V10_Z" | awk -F '[\t;]' '$3=="gene" {print $9, $4}' OFS="\t" | sed 's/ID=//g' > all_z_genes.list
+
 > sex.stage.all_z_genes.data.txt
 n=0
-while read GENE; do \
+while read GENE POS; do \
      n=$((n + 1)); \
      for STAGE in mCer_1_abund.out \
           mCer_2_abund.out \
@@ -499,21 +501,24 @@ while read GENE; do \
                >> sex.stage.all_z_genes.data.txt;
                done ;
           done < all_z_genes.list
+```
 
-
-
+```R
 library(tidyverse)
 library(pheatmap)
 
 male <- read.table("male_sex.stage.all_z_genes.data.txt")
 female <- read.table("female_sex.stage.all_z_genes.data.txt")
+pos <- read.table("all_z_genes.list")
 
 male <- male %>% mutate(stage = str_remove(V2, "^m"))
 female <- female %>% mutate(stage = str_remove(V2, "^f"))
 
 
+
 data<- full_join(male, female, by=c("V3","stage"))
-data <- data %>% mutate(diff = log10(V4.x/V4.y))
+data<- full_join(data, pos, by=c("V3"="V1"))
+data <- data %>% mutate(diff = log10((V4.x+0.001)/(V4.y+0.001)))
 
 
 data2 <- data %>% select("V3","stage","diff")
@@ -545,7 +550,7 @@ ggplot(data) +
           theme_bw() + theme(axis.text.x=element_text(angle=90, hjust=1)) +
           labs(y="", x="", fill="log(TPM)", title="W gametologues") +
           scale_y_discrete(position = "right")
-
+```
 
 
 
