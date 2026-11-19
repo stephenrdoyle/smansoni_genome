@@ -40,16 +40,31 @@ if [[ ! -s ${SAMPLE}.bam.bai ]]; then
         'BEGIN{f=(p=="illumina_exome") ? 1 : t*g/b; print (f>1 ? 1 : f)}')
     echo "${SAMPLE}: ${RUNS} ${PLATFORM}, ${BASES} bp over ${GSIZE} bp assembly, keeping fraction ${FRAC}"
 
-    # pool all runs: *_1 into reads_1, *_2 into reads_2, unpaired (PacBio) into reads_1
-    rm -f reads_1.fq.gz reads_2.fq.gz
+    # seqtk reads a fraction of exactly 1 as "keep 1 read", so skip it then
+    subsample() {
+        if awk -v f=${FRAC} 'BEGIN{exit !(f >= 1)}'; then zcat -f; else seqtk sample -s 11 - ${FRAC}; fi
+    }
+
+    # pool all runs: *_1 into reads_1, *_2 into reads_2, unpaired (PacBio) into reads_1.
+    # ENA lists some SRA-mirrored runs it won't serve (403); fetch those from NCBI instead
+    rm -f reads_1.fq.gz reads_2.fq.gz part.fq.gz
     IFS=';' read -r -a URLS <<< "${FASTQ}"
     for url in "${URLS[@]}"; do
-        case ${url} in
+        file=$(basename ${url})
+        case ${file} in
             *_2.fastq.gz) MATE=2 ;;
             *) MATE=1 ;;
         esac
-        wget -q -O - "https://${url}" | seqtk sample -s 11 - ${FRAC} | gzip -1 >> reads_${MATE}.fq.gz
+        if ! wget -q -O part.fq.gz "https://${url}"; then
+            run=${file%%[_.]*}
+            echo "${SAMPLE}: ENA download failed for ${file}, using fasterq-dump ${run}" >&2
+            [[ -s sra/${file%.gz} ]] || fasterq-dump --split-files -e ${THREADS} -O sra ${run}
+            gzip -1 -c sra/${file%.gz} > part.fq.gz
+        fi
+        subsample < part.fq.gz | gzip -1 >> reads_${MATE}.fq.gz
+        rm -f part.fq.gz
     done
+    rm -rf sra
 
     case ${PLATFORM} in
         illumina|illumina_exome) PRESET=sr ;;
@@ -62,8 +77,13 @@ if [[ ! -s ${SAMPLE}.bam.bai ]]; then
     minimap2 -t ${THREADS} -ax ${PRESET} -R "@RG\tID:${SAMPLE}\tSM:${SAMPLE}" ${ASM}/genome.fa reads_*.fq.gz |\
         samtools view -u -q ${MAPQ} -F 0x904 - |\
         samtools sort -@ 4 -m 2G -T ${SAMPLE}.sort -o ${SAMPLE}.bam -
-    samtools index ${SAMPLE}.bam
     rm -f reads_*.fq.gz
+
+    # stop before indexing if almost nothing mapped, so a rerun doesn't skip this sample
+    MAPPED=$(samtools view -c ${SAMPLE}.bam)
+    echo "${SAMPLE}: ${MAPPED} reads mapped at MAPQ >= ${MAPQ}"
+    (( MAPPED >= 100000 )) || { echo "${SAMPLE}: too few reads mapped" >&2; exit 1; }
+    samtools index ${SAMPLE}.bam
 fi
 
 mosdepth -t 4 -n --mapq ${MAPQ} --by ${ASM}/loci.bed ${SAMPLE}.loci ${SAMPLE}.bam
