@@ -155,7 +155,7 @@ read_loci <- function(sample_id, species_dir, assembly) {
     f <- file.path(workdir, "samples", sample_id, paste0(sample_id, ".loci.regions.bed.gz"))
     if (!file.exists(f)) return(NULL)
     lift <- read_tsv(file.path(asm, "liftover.tsv"), show_col_types = FALSE)
-    read_tsv(f, col_names = c("contig", "start", "end", "gene", "depth"), show_col_types = FALSE) |>
+    read_tsv(f, col_names = c("contig", "start", "end", "gene", "depth"), col_types = "cddcd") |>
         mutate(len = end - start) |>
         group_by(gene) |>
         summarise(depth = weighted.mean(depth, len), cds_len = sum(len), .groups = "drop") |>
@@ -204,7 +204,7 @@ fm <- fm_genes |>
 win <- function(id) {
     f <- file.path(workdir, "samples", id, paste0(id, ".w10k.regions.bed.gz"))
     if (!file.exists(f)) return(NULL)
-    read_tsv(f, col_names = c("chrom", "start", "end", "depth"), show_col_types = FALSE) |>
+    read_tsv(f, col_names = c("chrom", "start", "end", "depth"), col_types = "cddd") |>
         mutate(norm = depth / median(depth[chrom %in% AUTOSOMES & depth > 0]), sample_id = id)
 }
 sman_sexed <- sexed |> filter(species == "Schistosoma mansoni", data == "WGS") |> distinct(sample_id, sex)
