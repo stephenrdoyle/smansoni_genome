@@ -253,12 +253,14 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 
 - columns 2-3 are S. mansoni-order junctions, 4-5 S. japonicum-order junctions
 - orientation (Spearman rho per segment) agrees: S. haematobium all +1; S. japonicum flanks -1 / -0.86, B +1
-- H. americana keeps both S. mansoni junctions: S. mansoni order is ancestral and the inversion arose in the Asian
-  lineage. The ancestral boundary at 23.25 Mb is an inversion breakpoint only in S. japonicum, so the inversion did
-  not stop recombination there in S. mansoni
+- H. americana keeps both S. mansoni junctions, which points to S. mansoni order being ancestral and the inversion
+  arising in the Asian lineage. If so, the ancestral boundary at 23.25 Mb is an inversion breakpoint only in
+  S. japonicum, and the inversion did not stop recombination there in S. mansoni
 - in both Trichobilharzia the region is scattered across their Z (rho -0.3 to 0.6); the one ~1 Mb S. japonicum-type
-  junction is likely chance or breakpoint reuse. In the paper: "H. americana shares the S. mansoni arrangement at
-  both breakpoints, suggesting the inversion arose in the Asian lineage"
+  junction is likely chance or breakpoint reuse
+- H. americana and Trichobilharzia are equally distant from Schistosoma (sister clades, see below), so this rests on
+  H. americana alone, the one outgroup whose junctions survive. In the paper: "H. americana shares the S. mansoni
+  arrangement at both breakpoints, suggesting the inversion arose in the Asian lineage"
 - the minimap2 asm20 alignments (`vs_SmZ.paf`) are useless at this distance (10-40 kb aligned); gene placement is
   what counts
 
@@ -275,14 +277,25 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 | treg_1 (male) | 0.99-1.01 | 0.99 | 0.95 | 0.95-1.02 |
 
 - in H. americana and T. szidati females every S. mansoni interval, PAR1 and PAR2 included, is at 0.51-0.56: no
-  PAR at 5 Mb resolution (T. szidati 0-20 Mb is sparse and slightly high, possibly a small PAR - not checked)
+  PAR at 5 Mb resolution
+- T. szidati CHR_Z 0-20 Mb, gene by gene (2026-11-21): 34 genes at 2.3-19.6 Mb, median 0.75, range 0.31-2.55;
+  back to ~0.48 from 21.5 Mb. Not a PAR (that would be a tight run at ~1). Either the youngest part of its ZW
+  (W copies not yet diverged, so W reads map onto Z) or an assembly artefact at the chromosome end (this assembly
+  has the most ambiguous placements). 10 kb windows can't help: repeats push CHR_Z windows to 0.5-2.0 even where
+  genes are at 0.5. Unresolved without a male; backup tszi_2 (ERR119617) has no recorded sex
+- phylogeny (UCE phylogenomics, Pathogens 2022, 11:769): Heterobilharzia + Schistosomatium (HS) is sister to the
+  derived avian schistosomes (DAS, incl. Trichobilharzia), strongly supported; Schistosoma is sister to
+  Bivitellobilharzia (SB), and (SB + Macrobilharzia) is sister to (HS + DAS); Austrobilharzia + Ornithobilharzia
+  is sister to all. So both outgroups here belong to one clade, equally distant from Schistosoma
 - the genes of the Schistosoma PARs were Z-linked in the common ancestor and are hemizygous in both outgroups. A W
-  can't regain lost genes, so they were still PAR in the ancestor, and recombination stopped along the whole Z
-  later in the outgroup lineages (at least twice if Heterobilharzia is closer to Schistosoma than Trichobilharzia).
-  Schistosoma is the lineage that kept large PARs; its strata boundaries are its own
+  can't regain lost genes, so they were still PAR in the ancestor of Schistosoma and the outgroups, and
+  recombination stopped along the whole Z later on the HS + DAS side. One event on the HS + DAS stem is enough;
+  separate events in each lineage can't be excluded. Schistosoma is the lineage that kept large PARs; its strata
+  boundaries are its own
 - depth can't date the ancestral stratum against the outgroups (everything is hemizygous there). That would need
-  dS on any outgroup Z-W gametologues that survive
-- to check against published work on ZW in Schistosomatidae and a current phylogeny before it goes in the paper
+  dS on any outgroup Z-W gametologues that survive, or a female from the SB side (Bivitellobilharzia) or from
+  Austrobilharzia / Ornithobilharzia
+- to check against published work on ZW in Schistosomatidae before it goes in the paper
 
 ### Current model
 - ancestral stratum (23.25-43.74 Mb): hemizygous in all four Schistosoma; contains U2AF65 (dS ~2.6)
@@ -290,7 +303,8 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   depth can't test
 - Asian stratum: S. japonicum only, one block on its own Z, including ~0.9 Mb past the ancestral boundary brought
   next to it by the 20.9-23.25 Mb inversion (Asian lineage)
-- outgroups (H. americana, T. szidati): the whole Z hemizygous, Schistosoma PAR genes included
+- outgroups (H. americana, T. szidati; one clade, HS + DAS): the whole Z hemizygous, Schistosoma PAR genes
+  included - likely one event on that clade's stem
 
 
 ## 5. Date the strata with S. japonicum's W (to do)
@@ -323,7 +337,7 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 - Methods: sample sexes and accessions (fix "ERS09443" -> ERS094843)
 
 ## Open
-- T. szidati CHR_Z 0-20 Mb: gene by gene, to settle whether it has a small PAR
+- T. szidati CHR_Z 0-20 Mb: intermediate depth (section 4); map tszi_2 and, if male, compare F/M
 - script the model figure (strata bar, dS track, hemizygous blocks per species, inversion) from `strata/` outputs
 - results tables in section 4 were transcribed from the farm output; copy `strata/*.tsv` into `04_analysis/` if
   they go in the paper
