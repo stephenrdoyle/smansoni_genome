@@ -44,7 +44,8 @@ Table: `04_analysis/zw_gametologue_ds.tsv`
 
 ## Caveats
 - position is on Z only; W gene order is scrambled (Fig. 4b), so this is not a W-side map
-- small n beyond 19 Mb; breakpoint position is post hoc - to be tested with sexed coverage (`smansoni_genome.z_strata_v2_plan.md`)
+- small n beyond 19 Mb; breakpoint position is post hoc. Sexed coverage in four species can't test it: the whole
+  African stratum is hemizygous in every African species (`smansoni_genome.z_strata_remap.md`, section 4)
 - pseudogene dS from partial alignments
 
 ## For the manuscript

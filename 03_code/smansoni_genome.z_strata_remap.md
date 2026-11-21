@@ -2,7 +2,8 @@
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
-Status: scripts written and tested on simulated coverage; nothing run on real data yet.
+Status: run on tier 1 (4 sexed species, 18 samples) and three tier-2 outgroups, 2026-11-19 to 21. Results in
+section 4.
 Replaces the coverage approach in `smansoni_genome.z_strata.md` (Fig. 3a). Merges the earlier
 `smansoni_genome.z_strata_v2_plan.md` (sexed data) with the one-run-per-species remap.
 
@@ -70,17 +71,29 @@ Scripts in `03_code/z_strata_remap/`:
 | `prepare_assembly.sh` | download an assembly (WBPS or NCBI); miniprot v10 proteins onto it; asm20 to v10 Z |
 | `run_sample.sh` | stream + downsample reads to ~30x (exome kept whole), map (minimap2 sr / map-pb), mosdepth over loci and 10 kb windows |
 | `segment_strata.R` | normalise, F/M ratios, infer sex, segment, bootstrap boundaries, interval summary, plot |
+| `checks/fm_check.R` | S. mansoni F:M in 10 kb windows per region (validation) |
+| `checks/wsr_check.R` | S. mansoni W depth, windows vs W gene loci |
+| `checks/sjap_z_order.R` | S. japonicum F:M read along its own Z |
+| `checks/inversion_check.R` | orientation and junctions of the 20.9-23.25 Mb segment in each assembly (gene order only) |
+| `checks/outgroup_z.R` | outgroup depth per S. mansoni chromosome and along the outgroup's own Z |
 
 
 ## Setup
 ```bash
-WORKDIR=/nfs/users/nfs_s/sd21/lustre_link/schistosoma_mansoni/V10/STRATA_REMAP
-CODE=/nfs/users/nfs_s/sd21/lustre_link/schistosoma_mansoni/V10/smansoni_genome/03_code/z_strata_remap
+WORKDIR=/nfs/users/nfs_s/sd21/lustre_link/schistosoma_mansoni/project-genome-v10/04_analysis/z_strata_remap
+CODE=/nfs/users/nfs_s/sd21/lustre_link/schistosoma_mansoni/project-genome-v10/smansoni_genome/03_code/z_strata_remap
 
 mkdir -p ${WORKDIR} && cd ${WORKDIR}
 
 mamba env create -f ${CODE}/env.yaml
 conda activate z_strata_remap
+
+# every new login needs the env and both paths; jobs inherit them from the submitting shell
+cat > ${WORKDIR}/env.sh <<EOF
+conda activate z_strata_remap
+WORKDIR=${WORKDIR}
+CODE=${CODE}
+EOF
 
 bsub.py 8 ref_sman "bash ${CODE}/prepare_ref.sh ${WORKDIR}"
 ```
@@ -139,7 +152,148 @@ with `in_dS_gap` TRUE. In S. mansoni itself both halves of the ZSR are hemizygou
 boundary in another species.
 
 
-## 4. Date the strata with S. japonicum's W (to do)
+## 4. Results (2026-11-19 to 21)
+
+```bash
+# all from ${WORKDIR}; checks/*.R take WORKDIR as their only argument
+Rscript ${CODE}/checks/fm_check.R ${WORKDIR}
+Rscript ${CODE}/checks/wsr_check.R ${WORKDIR}
+Rscript ${CODE}/checks/sjap_z_order.R ${WORKDIR}     # needs strata/gene_depth.tsv
+Rscript ${CODE}/checks/inversion_check.R ${WORKDIR}  # gene order only, no reads
+Rscript ${CODE}/checks/outgroup_z.R ${WORKDIR}       # needs strata/gene_depth.tsv
+```
+
+### Mapping
+- every tier-1 sample and the three primary outgroups mapped: S. mansoni 59-62 M reads at MAPQ >= 20, S. rodhaini
+  WGS 53 M, exome 30-35 M per sample, treg_1 134 M, tszi_1 112 M, hame_1 2.1 M PacBio reads (~30x)
+- download failures on the first submission (all at the same minute, likely ENA refusing many connections at once)
+  and an exome subsampling bug (seqtk reads a fraction of 1 as "keep 1 read") are fixed in `run_sample.sh`
+
+### S. mansoni validation (`fm_check.R`, `wsr_check.R`)
+| region | windows | F | M | F/M |
+|---|---|---|---|---|
+| autosomes | 29,877 | 1 | 1 | 1 |
+| Z PARs | 5,363 | 1.00 | 1.00 | 1.00 |
+| ZSR African 10.7-18.4 | 774 | 0.52 | 1.01 | 0.51 |
+| ZSR African 19.1-23.25 | 411 | 0.52 | 1.02 | 0.51 |
+| ZSR ancestral | 2,049 | 0.50 | 0.99 | 0.51 |
+| WSR | 597 | 0.03 | 0 | - |
+
+- no W reads leak onto the Z at MAPQ 20 (ZSR F/M 0.51)
+- WSR: window median 0.03 in the female because most of the W is repeat; the 160 W gene loci are at 0.50 in the
+  female and 0 in the male
+
+### Sex calls
+- all 14 tier-1 WGS samples called as their metadata say
+- outgroups: hame_1 (H. americana) female, tszi_1 (T. szidati) female, treg_1 (T. regenti) male
+
+### Strata in four species (`strata/interval_summary.tsv`, `breakpoints.tsv`)
+F/M (median per interval, S. mansoni v10 Z coordinates):
+
+| interval | S. mansoni | S. rodhaini WGS / exome | S. haematobium | S. japonicum (4F 4M) |
+|---|---|---|---|---|
+| PAR1 (< 10.68) | 1.01 | 1.00 / 0.98 | 0.95 | 1.00 |
+| African_a 10.68-18.42 | 0.52 | 0.52 / 0.53 | 0.55 | 0.99 |
+| African_b 19.14-23.25 | 0.51 | 0.50 / 0.52 | 0.52 | 0.97 |
+| ancestral 23.25-43.74 | 0.51 | 0.51 / 0.52 | 0.51 | 0.51 |
+| Asian 43.74-51.3 | 1.00 | 0.98 / 0.97 | 1.03 | 0.53 |
+| PAR2 (> 51.3) | 1.00 | 1.00 / 1.00 | 1.00 | 1.00 |
+
+Full-to-half boundaries (bootstrap support 0.94-1):
+- S. mansoni 10.6 (CI 10.4-10.7) and 43.7 Mb; S. rodhaini 10.7 and 43.7 Mb (WGS and exome agree)
+- S. haematobium 10.1 (CI 9.6-10.2) and 43.9 Mb: left edge ~0.5 Mb beyond the others; PAR1 F/M slightly low (0.95)
+- S. japonicum, all four females: 20.9-21.8, 23.2-44.5 and 46.3-51.2 Mb. Ancestral boundary between Smp_347690
+  (23.2 Mb, F/M 1.02) and Smp_340330 (23.3 Mb, 0.46), i.e. the paper's 23.25 Mb, now from sexed data
+
+What this shows:
+- ancestral stratum hemizygous in all four species (before the African-Asian split); African stratum only in the
+  African species; Asian stratum only in S. japonicum - the paper's model, now from F/M in each species
+- **depth does not split the African stratum**: no boundary in any species falls in the 18.42-19.14 Mb dS step
+  (`in_dS_gap` FALSE throughout), and African_a = African_b in every African species. The two-step history rests on
+  dS alone; no sampled species diverged between the two steps
+- U2AF65 (dS ~2.6) is inside the stratum shared by all four species, consistent with it being oldest
+- the DnaJ pair Smp_336770 (23.46 Mb, dS 0.27) is hemizygous in S. japonicum too (F/M 0.63): a low-dS gametologue
+  inside the ancestral stratum, still unexplained (gene conversion, or a later W copy)
+- per-sample Wilcoxon p-values are not meaningful: shaem_F's p = 2e-5 (African_a 0.51 vs African_b 0.54) is matched
+  by the same shift in its males, i.e. coverage bias, which the F/M ratio cancels (p = 0.08)
+
+### S. japonicum: the 20.9-21.8 Mb block is an inversion, not a stratum (`sjap_z_order.R`)
+- every gene in S. mansoni 19-24 Mb sits on CM046069.1 (the S. japonicum Z), hemizygous or not
+- read in S. japonicum order, the hemizygous genes form one block, S. japonicum Z ~37.5-62.0 Mb (~25 Mb). S. mansoni
+  positions along it are shuffled: S. japonicum 37-43 Mb holds S. mansoni 42-50 Mb (end of ancestral + Asian),
+  44-60 Mb holds the ancestral stratum in blocks
+- at the end of the block:
+
+| S. mansoni genes | S. japonicum Z | F/M |
+|---|---|---|
+| 24 -> 23.3 (start of ancestral) | 59-61 Mb | 0.5 |
+| 20.9 -> 21.8 (Smp_084270 ... Smp_166610) | 61.2-62.0 Mb | 0.5 |
+| 21.8 -> 23.1 (Smp_104720 ...) | 62.3-63 Mb | 1.0 |
+| 20.9 -> 20.5 (Smp_167870, Smp_092880) | 63.9-64.1 Mb | 1.0 |
+
+- i.e. S. mansoni 20.9-23.2 Mb is inverted in S. japonicum. Its 20.9 end now abuts the ancestral stratum, and the
+  S. japonicum hemizygous region runs ~0.9 Mb into it, ending between Smp_166610 and Smp_104720 (neighbours in both
+  species). The "island" is an artefact of drawing S. japonicum on S. mansoni coordinates
+- the high-dS genes are not this block: Smp_007630 (19.14), Smp_340400 (20.27), Smp_092880 (20.51) and
+  Smp_158740 (22.85) are diploid in S. japonicum; only Smp_166600 (21.71) falls in the hemizygous edge
+- the 44.5-46.3 Mb "diploid gap" is probably the same kind of artefact (its genes appear inside and just outside
+  the block)
+
+### Polarising the inversion (`inversion_check.R`)
+Distance between segment ends on each assembly's Z (median of 3 end genes; A = 20.0 Mb to Smp_084270,
+B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
+
+| assembly | A_end-B_start | B_end-C_start | A_end-B_end | B_start-C_start | arrangement |
+|---|---|---|---|---|---|
+| S. haematobium (control) | 48 kb | 195 kb | 2.4 Mb | 2.6 Mb | S. mansoni |
+| S. japonicum (control) | 2.7 Mb | 2.7 Mb | 141 kb | 159 kb | S. japonicum |
+| H. americana | 131 kb | 505 kb | 4.3 Mb | 3.7 Mb | S. mansoni |
+| T. regenti | 85 Mb | 39 Mb | 1.3 Mb | 45 Mb | shuffled |
+| T. szidati | 92 Mb | 17 Mb | 1.0 Mb | 77 Mb | shuffled |
+
+- columns 2-3 are S. mansoni-order junctions, 4-5 S. japonicum-order junctions
+- orientation (Spearman rho per segment) agrees: S. haematobium all +1; S. japonicum flanks -1 / -0.86, B +1
+- H. americana keeps both S. mansoni junctions: S. mansoni order is ancestral and the inversion arose in the Asian
+  lineage. The ancestral boundary at 23.25 Mb is an inversion breakpoint only in S. japonicum, so the inversion did
+  not stop recombination there in S. mansoni
+- in both Trichobilharzia the region is scattered across their Z (rho -0.3 to 0.6); the one ~1 Mb S. japonicum-type
+  junction is likely chance or breakpoint reuse. In the paper: "H. americana shares the S. mansoni arrangement at
+  both breakpoints, suggesting the inversion arose in the Asian lineage"
+- the minimap2 asm20 alignments (`vs_SmZ.paf`) are useless at this distance (10-40 kb aligned); gene placement is
+  what counts
+
+### Outgroups: the whole Z is hemizygous (`outgroup_z.R`)
+- the Z is the same chromosome across the family: 90-100% of genes on each outgroup's CHR_Z are on the S. mansoni Z
+  (~150-180 Mb vs 85 Mb), and ~99/101 (T. regenti), 83/84 (T. szidati), 104/108 (H. americana) genes from
+  S. mansoni 20-24.5 Mb are on it
+- normalisation is fine: autosomes 0.93-1.03 in both females; treg_1 (male) ~1 everywhere
+
+| sample | S. mansoni autosomes | SM_V10_Z | SM_V10_WSR | own CHR_Z, 5 Mb bins |
+|---|---|---|---|---|
+| hame_1 (female) | 0.95-1.03 | 0.53 | 0.66 | 0.42-0.63 along all 150 Mb |
+| tszi_1 (female) | 0.93-1.02 | 0.53 | 0.51 | 0.48-0.55 from 20 Mb on; 0.78-0.80 in some bins at 0-20 Mb (6-11 genes each) |
+| treg_1 (male) | 0.99-1.01 | 0.99 | 0.95 | 0.95-1.02 |
+
+- in H. americana and T. szidati females every S. mansoni interval, PAR1 and PAR2 included, is at 0.51-0.56: no
+  PAR at 5 Mb resolution (T. szidati 0-20 Mb is sparse and slightly high, possibly a small PAR - not checked)
+- the genes of the Schistosoma PARs were Z-linked in the common ancestor and are hemizygous in both outgroups. A W
+  can't regain lost genes, so they were still PAR in the ancestor, and recombination stopped along the whole Z
+  later in the outgroup lineages (at least twice if Heterobilharzia is closer to Schistosoma than Trichobilharzia).
+  Schistosoma is the lineage that kept large PARs; its strata boundaries are its own
+- depth can't date the ancestral stratum against the outgroups (everything is hemizygous there). That would need
+  dS on any outgroup Z-W gametologues that survive
+- to check against published work on ZW in Schistosomatidae and a current phylogeny before it goes in the paper
+
+### Current model
+- ancestral stratum (23.25-43.74 Mb): hemizygous in all four Schistosoma; contains U2AF65 (dS ~2.6)
+- African stratum (10.68-23.25 Mb): after the African-Asian split; dS suggests two steps (~18.4-19.1 Mb), which
+  depth can't test
+- Asian stratum: S. japonicum only, one block on its own Z, including ~0.9 Mb past the ancestral boundary brought
+  next to it by the 20.9-23.25 Mb inversion (Asian lineage)
+- outgroups (H. americana, T. szidati): the whole Z hemizygous, Schistosoma PAR genes included
+
+
+## 5. Date the strata with S. japonicum's W (to do)
 - find Z-W gametologue pairs in S. japonicum (W CM046068.1) and compute dS as for S. mansoni (zw_ds.py)
 - gene trees for gametologues present in both species: if Sm-W and Sj-W cluster together, recombination stopped
   before the African-Asian split (ancestral); if Sm-W clusters with Sm-Z, it stopped after (lineage-specific)
@@ -169,6 +323,10 @@ boundary in another species.
 - Methods: sample sexes and accessions (fix "ERS09443" -> ERS094843)
 
 ## Open
+- T. szidati CHR_Z 0-20 Mb: gene by gene, to settle whether it has a small PAR
+- script the model figure (strata bar, dS track, hemizygous blocks per species, inversion) from `strata/` outputs
+- results tables in section 4 were transcribed from the farm output; copy `strata/*.tsv` into `04_analysis/` if
+  they go in the paper
 - S. mansoni clonal male PCR-free library ID (Table S1), to pair with 6520_5 instead of ERR3467675/76
 - S. bovis mated pair (PRJNA451066, mixed) vs male ERR3061640: weaker ~0.75 signal; not in samples.tsv yet
 - request female data for the haematobium group / new single-sex sequencing for Heterobilharzia, S. spindale,
