@@ -266,7 +266,7 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 
 ### Outgroups: the whole Z is hemizygous (`outgroup_z.R`)
 - the Z is the same chromosome across the family: 90-100% of genes on each outgroup's CHR_Z are on the S. mansoni Z
-  (~150-180 Mb vs 85 Mb), and ~99/101 (T. regenti), 83/84 (T. szidati), 104/108 (H. americana) genes from
+  (~150-180 Mb vs 86.7 Mb), and ~99/101 (T. regenti), 83/84 (T. szidati), 104/108 (H. americana) genes from
   S. mansoni 20-24.5 Mb are on it
 - normalisation is fine: autosomes 0.93-1.03 in both females; treg_1 (male) ~1 everywhere
 
@@ -295,7 +295,36 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 - depth can't date the ancestral stratum against the outgroups (everything is hemizygous there). That would need
   dS on any outgroup Z-W gametologues that survive, or a female from the SB side (Bivitellobilharzia) or from
   Austrobilharzia / Ornithobilharzia
-- to check against published work on ZW in Schistosomatidae before it goes in the paper
+
+### Against published work (checked 2026-11-21)
+- Picard et al. 2018, eLife 7:e35684 (PMC6089595): Z-specific genes from F/M coverage in S. mansoni and
+  S. japonicum (pooled sexed worms) and S. haematobium (females only). Defined S0 (shared, 367 genes), S1mans
+  (African, 180) and S1jap (Asian, 66). Also Z dosage: partial compensation by Z upregulation in both sexes
+- Elkrewi et al. 2021, MBE 38:5345 (PMC8662593): W-linked genes in S. mansoni and S. japonicum. W copies of u2af2
+  (= U2AF65) from both species cluster, so S0 stopped recombining before the African-Asian split. Median Z-W dS:
+  S0 0.88 (Sm) / 0.61 (Sj), S1man 0.18, S1jap 0.47. A very young S. japonicum stratum, S2jap (28.8 Mb, 720 genes,
+  dS 0.085), at the distal end of its Z, found from female-male FST, not coverage. u2af2 proposed as the
+  sex-determination candidate
+- Xu et al. 2023, Mol Ecol Resour 23:1 (doi 10.1111/1755-0998.13689): the S. japonicum assembly used here. Abstract
+  reports five strata in S. japonicum and two in S. mansoni, formed by independent recombination suppression.
+  Full text not checked (403); its Z synteny figure may already show the inversion
+- older cytogenetics (Springer, doi 10.1007/BF00286030): ZW differentiation in Schistosomatium / Heterobilharzia
+  arose by translocation, unlike Schistosoma
+- no genome-level work found on Z coverage in Heterobilharzia or Trichobilharzia
+
+| our result | status |
+|---|---|
+| three strata (ancestral, African, Asian) | known (Picard 2018); we add sexed F/M per species, S. haematobium males, S. rodhaini, boundaries with CIs |
+| ancestral stratum predates the African-Asian split | known (Elkrewi 2021, u2af2 gene trees); our shared hemizygosity agrees |
+| U2AF65 the most diverged pair | known (u2af2 in S0); fits their sex-determination candidate |
+| African stratum in two steps (dS 0.15 vs 0.63 at 18.4-19.1 Mb) | not reported; our lower block matches their S1man dS (0.18). Rests on 5 pairs |
+| 20.9-23.25 Mb inversion, Asian lineage | not found in what we could read; check Xu 2023 full text |
+| whole Z hemizygous in H. americana and T. szidati | not found at genome level |
+
+- coverage only sees strata where the W has diverged enough to lose reads: S2jap and some of Xu's five
+  S. japonicum strata are invisible here. Say "strata visible in coverage" for S. japonicum
+- in the paper: cite Picard 2018 and Elkrewi 2021 for the three-strata model and S0's age; the new claims are the
+  sexed per-species boundaries, the African two-step dS, the inversion and the outgroups
 
 ### Current model
 - ancestral stratum (23.25-43.74 Mb): hemizygous in all four Schistosoma; contains U2AF65 (dS ~2.6)
@@ -307,7 +336,9 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   included - likely one event on that clade's stem
 
 
-## 5. Date the strata with S. japonicum's W (to do)
+## 5. Date the strata with S. japonicum's W (to do; lower priority)
+- Elkrewi et al. 2021 already did this for u2af2 (S0 predates the split). What's left: other S0 genes, and the
+  DnaJ pair
 - find Z-W gametologue pairs in S. japonicum (W CM046068.1) and compute dS as for S. mansoni (zw_ds.py)
 - gene trees for gametologues present in both species: if Sm-W and Sj-W cluster together, recombination stopped
   before the African-Asian split (ancestral); if Sm-W clusters with Sm-Z, it stopped after (lineage-specific)
