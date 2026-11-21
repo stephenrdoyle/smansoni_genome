@@ -296,6 +296,39 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   dS on any outgroup Z-W gametologues that survive, or a female from the SB side (Bivitellobilharzia) or from
   Austrobilharzia / Ornithobilharzia
 
+### Is the outgroup W assembled? (2026-11-21)
+- window depth misleads for W: W windows are mostly repeat and sit near 0 even in a female (S. mansoni female WSR
+  window median 0.03), and duplicated contigs drop to 0 through the MAPQ filter. Gene-level depth and
+  self-alignment are needed
+- H. americana: no W assembled (CHR_Z at 0.5, almost no unplaced sequence)
+- T. szidati (female): T. szidati CHR_7 looked half-depth in windows but its genes sit at 0.93 (homologue of
+  S. mansoni chr 7; repeat artefact, not a neo-Z). Its zero-depth unplaced contigs are mostly >= 99% copies of
+  other sequence (MAPQ artefact). No W identifiable from this sample
+- T. regenti (treg_1, male): 67 unplaced contigs >= 20 kb at zero depth, 64 with no close copy elsewhere (minimap2
+  asm20). Genes on them are enriched for second copies of Z genes. Five contigs (UNPLACED_00115, 00117, 00373,
+  00423, 00478; 21 genes) paired with CHR_Z genes and given dS (`03_code/zw_gametologue_dS/treg_zw.py`,
+  `04_analysis/treg_zw_gametologue_ds.tsv`, T. regenti WBPS19 annotation):
+    - most copies near-identical to their Z partner (dS 0-0.06); one gene in two pieces diverged (TREG1_137610/620
+      vs Z TREG1_1250, dS ~0.13, aa 92%); five hits not Z copies (excluded)
+    - depth of each partner in the male decides whether the W copy's zero is real:
+
+| W-contig gene | Z partner | Z depth (male) | W depth (male) | reading |
+|---|---|---|---|---|
+| TREG1_137610/620 (00117), dS 0.13 | TREG1_1250 | 1.04 | 0.00 | W copy truly absent from the male: best W evidence |
+| TREG1_137570/580 (00115), dS 0.01-0.03 | TREG1_25140 / 25130 | 0.50 / 0.80 | 0.00 / 0.02 | mostly real absence; young copies |
+| TREG1_142340 (00423) | TREG1_28520 | 0.30 | 0.01 | partly masked |
+| TREG1_143810 (00478) | TREG1_1910 | 0.24 | 0.01 | mostly masked |
+| TREG1_141010 (00373) | TREG1_13090 | 0.07 | 0.00 | identical copies; uninformative |
+
+- so UNPLACED_00117 (and probably 00115) is sequence missing from the male that carries a diverged copy of a Z gene:
+  the T. regenti W, or sequence specific to the reference individual. The four-point test on protein distances
+  puts each W copy of the Smp_120320 homologue with its own species' Z copy (S. mansoni pair Smp_120320 /
+  Smp_310950, dS 0.17): consistent with independent suppression, one gene only
+- correction: UNPLACED_00373 is not evidence of W. Its gene is 99.8% identical to its Z partner and both have
+  zero depth, so the S. mansoni W protein (Smp_320940) landed there only because the two copies are identical
+- the near-identical copies can't date the outgroup's whole-Z suppression. A T. regenti female (treg_2, sex
+  unknown) would test the diverged parts of 00117 / 00115: ~0.5 if W
+
 ### Against published work (checked 2026-11-21)
 - Picard et al. 2018, eLife 7:e35684 (PMC6089595): Z-specific genes from F/M coverage in S. mansoni and
   S. japonicum (pooled sexed worms) and S. haematobium (females only). Defined S0 (shared, 367 genes), S1mans
