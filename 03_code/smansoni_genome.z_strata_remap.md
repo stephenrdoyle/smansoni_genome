@@ -305,11 +305,26 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   S0 0.88 (Sm) / 0.61 (Sj), S1man 0.18, S1jap 0.47. A very young S. japonicum stratum, S2jap (28.8 Mb, 720 genes,
   dS 0.085), at the distal end of its Z, found from female-male FST, not coverage. u2af2 proposed as the
   sex-determination candidate
-- Xu et al. 2023, Mol Ecol Resour 23:1 (doi 10.1111/1755-0998.13689): the S. japonicum assembly used here. Abstract
-  reports five strata in S. japonicum and two in S. mansoni, formed by independent recombination suppression.
-  Full text not checked (403); its Z synteny figure may already show the inversion
-- older cytogenetics (Springer, doi 10.1007/BF00286030): ZW differentiation in Schistosomatium / Heterobilharzia
-  arose by translocation, unlike Schistosoma
+- Xu et al. 2023 (online 2022), Mol Ecol Resour 23(1) (doi 10.1111/1755-0998.13689): the S. japonicum V3 assembly
+  used here (chrZ = CM046069.1). Strata from F/M depth, female SNP density, W-Z identity and orthology to
+  S. mansoni V7 (fused chrZW). On their chrZ (Fig. 4, approx.): PAR 0-11 Mb, S4 ~11-33, S2 ~33, S3 ~34-35,
+  S1 ~35-40, S0 ~40-62, PAR ~62-87. Only S1 and S0 (and S2, small) show 2x M/F depth; S3 and S4 are young,
+  equal depth, female-biased SNPs. S0 = the part of their SDR shared with the S. mansoni SDR (20.5% of it).
+  Gene trees for 7 genes (S4, S2) support strata forming independently after the split. No W fragments
+  assembled for S0; u2af2 found only on chrZ. They note "Z-linked rearrangements" between the species and a
+  Z-linked inversion that "probably reversed the order of SjapS2 and SjapS3", but don't describe our inversion
+- agreement with Xu: our S. japonicum hemizygous block (its Z 37.5-62.0 Mb) is their S1 + S0, with the same right
+  edge (62.0-62.3 Mb). Our "Asian stratum" (S. mansoni 43.7-51.3) is their SjapS1. Their S2-S4 are invisible to
+  depth, as expected
+- difference: by their orthology rule, the inverted 0.9 Mb piece (S. mansoni 20.9-21.8, on their chrZ 61.2-62.0)
+  falls in S0, because it is hemizygous in both species. We read it as an Asian-lineage extension: in S. mansoni it
+  sits in the African stratum, diploid in S. japonicum on both sides of it, its Z-W dS (Smp_166600, 0.53) is below
+  S0 (0.88, Elkrewi), and the inversion put it next to S0. Worth stating in the paper
+- Grossman, Short & Cain 1981, Chromosoma 84:413-430 (doi 10.1007/BF00286030): C-banded karyotypes. African
+  Schistosoma: Z and W similar in size, W partly heterochromatic. Asian (S. japonicum, S. mekongi): W smaller than
+  Z (deletion). Schistosomatium douthitti and H. americana: grossly heteromorphic ZW, Z the largest chromosome,
+  W about a third of its length (S. douthitti relative lengths 33.2 vs 12.3); H. americana W also heterochromatic.
+  They infer translocation of W material onto the Z. Trichobilharzia not studied
 - no genome-level work found on Z coverage in Heterobilharzia or Trichobilharzia
 
 | our result | status |
@@ -318,11 +333,12 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 | ancestral stratum predates the African-Asian split | known (Elkrewi 2021, u2af2 gene trees); our shared hemizygosity agrees |
 | U2AF65 the most diverged pair | known (u2af2 in S0); fits their sex-determination candidate |
 | African stratum in two steps (dS 0.15 vs 0.63 at 18.4-19.1 Mb) | not reported; our lower block matches their S1man dS (0.18). Rests on 5 pairs |
-| 20.9-23.25 Mb inversion, Asian lineage | not found in what we could read; check Xu 2023 full text |
-| whole Z hemizygous in H. americana and T. szidati | not found at genome level |
+| S. japonicum hemizygous block and its edges | agrees with Xu 2023 (their S1 + S0, right edge ~62 Mb) |
+| 20.9-23.25 Mb inversion, Asian lineage | new: Xu's Fig. 4a shows the Z rearranged but neither describes nor polarises it, and counts the inverted 0.9 Mb as S0 |
+| whole Z hemizygous in H. americana and T. szidati | new at genome level; fits the heteromorphic ZW of H. americana in Grossman et al. 1981 |
 
-- coverage only sees strata where the W has diverged enough to lose reads: S2jap and some of Xu's five
-  S. japonicum strata are invisible here. Say "strata visible in coverage" for S. japonicum
+- coverage only sees strata where the W has diverged enough to lose reads: Xu's S3 and S4 (and Elkrewi's S2jap)
+  are invisible here. Say "strata visible in coverage" for S. japonicum
 - in the paper: cite Picard 2018 and Elkrewi 2021 for the three-strata model and S0's age; the new claims are the
   sexed per-species boundaries, the African two-step dS, the inversion and the outgroups
 
