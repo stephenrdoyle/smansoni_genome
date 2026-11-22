@@ -188,7 +188,7 @@ Rscript ${CODE}/checks/tszi_par.R ${WORKDIR}         # needs tszi_1 and tszi_2 i
 ### Sex calls
 - all 14 tier-1 WGS samples called as their metadata say
 - outgroups: hame_1 (H. americana) female, tszi_1 (T. szidati) female, treg_1 (T. regenti) male
-- backups: tszi_2 called male, but its Z is at 0.87, not 1: mostly male with some female DNA (~25%);
+- backups (both sex-mixed pools): tszi_2 called male, but its Z is at 0.87, not 1: mostly male with some female DNA (~25%);
   treg_2 pooled/mixed, Z at 0.77 (~45% female). Both read as sex-mixed pools of cercariae
 
 ### Strata in four species (`strata/interval_summary.tsv`, `breakpoints.tsv`)
@@ -300,15 +300,27 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 | tszi_1 (F) / tszi_2 (~75% M) | 0.94-0.99 | 0.62 | 0.84, 1.15, 1.01, 0.84 at 0-20 Mb; 0.75 at 20 Mb; 0.53-0.66 from 25 Mb on |
 | treg_1 (M) / treg_2 (~45% F) | 0.98-1.03 | 1.28 | 1.05-1.42 along all 165 Mb, no bin near 1 |
 
-- T. szidati: the 0-20 Mb end recombines. The ratio is ~1 there and ~0.6 (the hemizygous value for this pool)
-  along the rest of the Z. Absolute depth is low at 0-20 Mb in both samples (tszi_1 0.50-0.80, tszi_2
-  0.66-1.08), which is why tszi_1 alone looked intermediate; the ratio cancels it. So T. szidati has a small PAR
-  at the start of its Z (~20 of 180 Mb). Caveat: 34 genes in 6-11-gene bins
+- T. szidati: in 5 Mb bins the 0-20 Mb end looks PAR-like (ratio ~1 there, ~0.6 along the rest of the Z). Gene
+  by gene it isn't (`tszi_par.R`, below)
 - T. regenti: the whole Z is reduced in the female-containing pool, every 5 Mb bin. No PAR at this resolution,
   as in H. americana
-- so the outgroup picture is: whole Z hemizygous in H. americana and T. regenti, all but a ~20 Mb PAR in
-  T. szidati. The PAR genes are S. mansoni Z genes (sm_Z = 1); whether they are S. mansoni PAR genes is the next
-  check
+
+### The T. szidati 0-20 Mb end, gene by gene (`tszi_par.R`)
+- 33 genes at 2.3-19.6 Mb: tszi_1/tszi_2 ratio median 0.87, range 0.38-2.31. Only 10 are at 0.85-1.15 (PAR-like),
+  10 at <= 0.70 (hemizygous-like), and the rest scattered up to 2.3. Absolute depth is erratic in both samples
+  (0.17-2.55), unlike the rest of the Z, where genes sit tightly at ~0.5 (female) and the ratio at ~0.6
+- no contiguous run at ~1: a hemizygous-looking block sits inside it (Smp_245360/245370/031050 at 13.6-13.9 Mb,
+  ratio 0.38-0.53), and the S. mansoni PAR1 genes at 17.5-19.6 Mb are mixed (0.54-1.66)
+- gene content is not the S. mansoni PAR: 18 African, 9 PAR1, 5 ancestral, 1 WSR-homologue, no PAR2 (PAR genes
+  are 48% of S. mansoni Z genes, 28% here). Several are the S. mansoni 20.6-21.2 Mb inversion-junction genes,
+  some at 0.2-0.4 depth in both samples (likely duplicated, lost to MAPQ)
+- elsewhere on the T. szidati Z, the S. mansoni PAR genes are firmly hemizygous: PAR1 134 genes ratio 0.62, PAR2
+  575 genes 0.61, same as African (0.60) and ancestral (0.61)
+- reading: the 0-20 Mb end is a rearranged, depth-erratic region, most likely affected by assembly (collapsed or
+  duplicated sequence at the chromosome end). It is not good evidence for a PAR. A small PAR inside it can't be
+  excluded, but nothing here shows one
+- so the outgroup picture stands: the whole Z hemizygous in H. americana, T. szidati and T. regenti, the
+  S. mansoni PAR genes included; the first ~20 Mb of the T. szidati Z unresolved
 - phylogeny (UCE phylogenomics, Pathogens 2022, 11:769): Heterobilharzia + Schistosomatium (HS) is sister to the
   derived avian schistosomes (DAS, incl. Trichobilharzia), strongly supported; Schistosoma is sister to
   Bivitellobilharzia (SB), and (SB + Macrobilharzia) is sister to (HS + DAS); Austrobilharzia + Ornithobilharzia
@@ -410,7 +422,7 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 | African stratum in two steps (dS 0.15 vs 0.63 at 18.4-19.1 Mb) | not reported; our lower block matches their S1man dS (0.18). Rests on 5 pairs |
 | S. japonicum hemizygous block and its edges | agrees with Xu 2023 (their S1 + S0, right edge ~62 Mb) |
 | 20.9-23.25 Mb inversion, Asian lineage | new: Xu's Fig. 4a shows the Z rearranged but neither describes nor polarises it, and counts the inverted 0.9 Mb as S0 |
-| whole Z hemizygous in H. americana and T. szidati | new at genome level; fits the heteromorphic ZW of H. americana in Grossman et al. 1981 |
+| whole Z hemizygous in H. americana, T. szidati and T. regenti | new at genome level; fits the heteromorphic ZW of H. americana in Grossman et al. 1981 |
 
 - coverage only sees strata where the W has diverged enough to lose reads: Xu's S3 and S4 (and Elkrewi's S2jap)
   are invisible here. Say "strata visible in coverage" for S. japonicum
@@ -424,8 +436,8 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 - Asian stratum: S. japonicum only, one block on its own Z, including ~0.9 Mb past the ancestral boundary brought
   next to it by the 20.9-23.25 Mb inversion (Asian lineage)
 - outgroups (H. americana, T. szidati, T. regenti; one clade, HS + DAS): the whole Z hemizygous in
-  H. americana and T. regenti; all but a ~20 Mb PAR in T. szidati. Schistosoma PAR genes are hemizygous in all
-  three. T. regenti has an assembled W fragment (UNPLACED_00115, 00117) with one gene that diverged from its Z
+  all three (the first ~20 Mb of the T. szidati Z erratic, unresolved). Schistosoma PAR genes are hemizygous in
+  all three. T. regenti has an assembled W fragment (UNPLACED_00115, 00117) with one gene that diverged from its Z
   copy independently of the Schistosoma W
 
 
@@ -461,7 +473,8 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 - Methods: sample sexes and accessions (fix "ERS09443" -> ERS094843)
 
 ## Open
-- T. szidati PAR (CHR_Z 0-20 Mb): which S. mansoni Z positions its 34 genes come from
+- T. szidati CHR_Z 0-20 Mb: erratic depth in both samples, mixed ratios (`tszi_par.R`); an assembly problem or a
+  small PAR. Would need a clean single-sex sample or a better assembly of that end
 - T. regenti W genes at higher depth than the pool's female share predicts: multi-copy on W?
 - script the model figure (strata bar, dS track, hemizygous blocks per species, inversion) from `strata/` outputs
 - results tables in section 4 were transcribed from the farm output; copy `strata/*.tsv` into `04_analysis/` if
