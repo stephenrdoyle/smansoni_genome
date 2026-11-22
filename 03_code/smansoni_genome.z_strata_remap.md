@@ -2,7 +2,7 @@
 
 ### author: Stephen Doyle, stephen.doyle[at]sanger.ac.uk
 
-Status: run on tier 1 (4 sexed species, 18 samples) and three tier-2 outgroups, 2026-11-19 to 21. Results in
+Status: run on tier 1 (4 sexed species, 18 samples) and five tier-2 outgroup samples, 2026-11-19 to 21. Results in
 section 4.
 Replaces the coverage approach in `smansoni_genome.z_strata.md` (Fig. 3a). Merges the earlier
 `smansoni_genome.z_strata_v2_plan.md` (sexed data) with the one-run-per-species remap.
@@ -186,6 +186,8 @@ Rscript ${CODE}/checks/outgroup_z.R ${WORKDIR}       # needs strata/gene_depth.t
 ### Sex calls
 - all 14 tier-1 WGS samples called as their metadata say
 - outgroups: hame_1 (H. americana) female, tszi_1 (T. szidati) female, treg_1 (T. regenti) male
+- backups: tszi_2 called male, but its Z is at 0.87, not 1: mostly male with some female DNA (~25%);
+  treg_2 pooled/mixed, Z at 0.77 (~45% female). Both read as sex-mixed pools of cercariae
 
 ### Strata in four species (`strata/interval_summary.tsv`, `breakpoints.tsv`)
 F/M (median per interval, S. mansoni v10 Z coordinates):
@@ -282,7 +284,29 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   back to ~0.48 from 21.5 Mb. Not a PAR (that would be a tight run at ~1). Either the youngest part of its ZW
   (W copies not yet diverged, so W reads map onto Z) or an assembly artefact at the chromosome end (this assembly
   has the most ambiguous placements). 10 kb windows can't help: repeats push CHR_Z windows to 0.5-2.0 even where
-  genes are at 0.5. Unresolved without a male; backup tszi_2 (ERR119617) has no recorded sex
+  genes are at 0.5. Unresolved without a male; backup tszi_2 (ERR119617) has no recorded sex.
+  Superseded by the second-sample comparison below
+
+### Second samples: tszi_2 and treg_2 (`outgroup_z.R`, 2026-11-21)
+- both are sex-mixed, so neither gives a clean F/M. What they do give is a ratio against the first sample that
+  separates hemizygous from recombining sequence: for a pool with female share f, a hemizygous region sits at
+  1 - f/2 and a PAR at 1
+- autosomes 0.94-1.03 in every ratio, so normalisation holds
+
+| comparison | S. mansoni autosomes | SM_V10_Z | own CHR_Z, 5 Mb bins |
+|---|---|---|---|
+| tszi_1 (F) / tszi_2 (~75% M) | 0.94-0.99 | 0.62 | 0.84, 1.15, 1.01, 0.84 at 0-20 Mb; 0.75 at 20 Mb; 0.53-0.66 from 25 Mb on |
+| treg_1 (M) / treg_2 (~45% F) | 0.98-1.03 | 1.28 | 1.05-1.42 along all 165 Mb, no bin near 1 |
+
+- T. szidati: the 0-20 Mb end recombines. The ratio is ~1 there and ~0.6 (the hemizygous value for this pool)
+  along the rest of the Z. Absolute depth is low at 0-20 Mb in both samples (tszi_1 0.50-0.80, tszi_2
+  0.66-1.08), which is why tszi_1 alone looked intermediate; the ratio cancels it. So T. szidati has a small PAR
+  at the start of its Z (~20 of 180 Mb). Caveat: 34 genes in 6-11-gene bins
+- T. regenti: the whole Z is reduced in the female-containing pool, every 5 Mb bin. No PAR at this resolution,
+  as in H. americana
+- so the outgroup picture is: whole Z hemizygous in H. americana and T. regenti, all but a ~20 Mb PAR in
+  T. szidati. The PAR genes are S. mansoni Z genes (sm_Z = 1); whether they are S. mansoni PAR genes is the next
+  check
 - phylogeny (UCE phylogenomics, Pathogens 2022, 11:769): Heterobilharzia + Schistosomatium (HS) is sister to the
   derived avian schistosomes (DAS, incl. Trichobilharzia), strongly supported; Schistosoma is sister to
   Bivitellobilharzia (SB), and (SB + Macrobilharzia) is sister to (HS + DAS); Austrobilharzia + Ornithobilharzia
@@ -326,8 +350,24 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   Smp_310950, dS 0.17): consistent with independent suppression, one gene only
 - correction: UNPLACED_00373 is not evidence of W. Its gene is 99.8% identical to its Z partner and both have
   zero depth, so the S. mansoni W protein (Smp_320940) landed there only because the two copies are identical
-- the near-identical copies can't date the outgroup's whole-Z suppression. A T. regenti female (treg_2, sex
-  unknown) would test the diverged parts of 00117 / 00115: ~0.5 if W
+- the near-identical copies can't date the outgroup's whole-Z suppression
+- treg_2 (~45% female pool) settles which contigs are female-specific (`samtools bedcov`, normalised by each
+  sample's autosomal gene median):
+
+| W-contig gene | treg_1 (M) | treg_2 (pool) | Z partner, treg_1 -> treg_2 |
+|---|---|---|---|
+| TREG1_137570 (00115) | 0.00 | 0.45 | TREG1_25140: 0.45 -> 0.38 |
+| TREG1_137580 (00115) | 0.01 | 0.69 | TREG1_25130: 0.71 -> 0.58 |
+| TREG1_137610 (00117), dS 0.13 | 0.00 | 0.57 | TREG1_1250: 0.93 -> 0.58 |
+| TREG1_137620 (00117) | 0.00 | 0.09 | (400 bp gene) |
+| TREG1_141010 (00373) | 0.00 | 0.02 | TREG1_13090 |
+| TREG1_142340 (00423) | 0.01 | 0.04 | TREG1_28520 |
+| TREG1_143810 (00478) | 0.01 | 0.00 | TREG1_1910 |
+
+- UNPLACED_00115 and 00117 are W: absent from the male, present in the sample with females. 00373, 00423 and
+  00478 are absent from both: reference-specific or assembly debris, not W
+- the W genes sit higher (0.45-0.69) than a single-copy W in a ~45% female pool would (~0.23). Possibly several
+  copies on the W collapsed in the assembly; not resolved. It doesn't change which contigs are W
 
 ### Against published work (checked 2026-11-21)
 - Picard et al. 2018, eLife 7:e35684 (PMC6089595): Z-specific genes from F/M coverage in S. mansoni and
@@ -381,8 +421,10 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
   depth can't test
 - Asian stratum: S. japonicum only, one block on its own Z, including ~0.9 Mb past the ancestral boundary brought
   next to it by the 20.9-23.25 Mb inversion (Asian lineage)
-- outgroups (H. americana, T. szidati; one clade, HS + DAS): the whole Z hemizygous, Schistosoma PAR genes
-  included - likely one event on that clade's stem
+- outgroups (H. americana, T. szidati, T. regenti; one clade, HS + DAS): the whole Z hemizygous in
+  H. americana and T. regenti; all but a ~20 Mb PAR in T. szidati. Schistosoma PAR genes are hemizygous in all
+  three. T. regenti has an assembled W fragment (UNPLACED_00115, 00117) with one gene that diverged from its Z
+  copy independently of the Schistosoma W
 
 
 ## 5. Date the strata with S. japonicum's W (to do; lower priority)
@@ -417,7 +459,8 @@ B = Smp_084270 to 23.25 Mb, C = 23.25-24.5 Mb):
 - Methods: sample sexes and accessions (fix "ERS09443" -> ERS094843)
 
 ## Open
-- T. szidati CHR_Z 0-20 Mb: intermediate depth (section 4); map tszi_2 and, if male, compare F/M
+- T. szidati PAR (CHR_Z 0-20 Mb): which S. mansoni Z positions its 34 genes come from
+- T. regenti W genes at higher depth than the pool's female share predicts: multi-copy on W?
 - script the model figure (strata bar, dS track, hemizygous blocks per species, inversion) from `strata/` outputs
 - results tables in section 4 were transcribed from the farm output; copy `strata/*.tsv` into `04_analysis/` if
   they go in the paper
