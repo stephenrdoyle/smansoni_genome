@@ -76,6 +76,7 @@ Scripts in `03_code/z_strata_remap/`:
 | `checks/sjap_z_order.R` | S. japonicum F:M read along its own Z |
 | `checks/inversion_check.R` | orientation and junctions of the 20.9-23.25 Mb segment in each assembly (gene order only) |
 | `checks/outgroup_z.R` | outgroup depth per S. mansoni chromosome and along the outgroup's own Z |
+| `checks/tszi_par.R` | S. mansoni positions of the genes in the T. szidati PAR, with the tszi_1/tszi_2 ratio |
 
 
 ## Setup
@@ -161,6 +162,7 @@ Rscript ${CODE}/checks/wsr_check.R ${WORKDIR}
 Rscript ${CODE}/checks/sjap_z_order.R ${WORKDIR}     # needs strata/gene_depth.tsv
 Rscript ${CODE}/checks/inversion_check.R ${WORKDIR}  # gene order only, no reads
 Rscript ${CODE}/checks/outgroup_z.R ${WORKDIR}       # needs strata/gene_depth.tsv
+Rscript ${CODE}/checks/tszi_par.R ${WORKDIR}         # needs tszi_1 and tszi_2 in gene_depth.tsv
 ```
 
 ### Mapping
